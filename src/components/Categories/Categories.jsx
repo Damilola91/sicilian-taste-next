@@ -1,37 +1,63 @@
-"use client";
+// src/components/Categories/Categories.jsx
+import Link from "next/link";
+import { getAllProductsAction } from "@/actions/product";
 
-import { useRouter } from "next/navigation";
+const Categories = async () => {
+  // 🔥 Fetch prodotti dal backend lato server
+  const data = await getAllProductsAction();
 
-const Categories = ({ categories, images }) => {
-  const router = useRouter();
+  // In base a come risponde il backend:
+  const products = Array.isArray(data?.products) ? data.products : data || [];
+
+  const categories = Array.from(
+    new Set(products.map((product) => product.category))
+  );
+
+  const getCategoryImage = (category) => {
+    const product = products.find((p) => p.category === category);
+    return product
+      ? product.img
+      : "https://via.placeholder.com/150?text=No+Image";
+  };
+
+  if (!products.length || !categories.length) {
+    return (
+      <section className="max-w-6xl mx-auto my-10 px-4">
+        <h2 className="text-center text-3xl font-bold mb-6">Categories</h2>
+        <p className="text-center text-gray-600">No categories available.</p>
+      </section>
+    );
+  }
 
   return (
-    <div className="categories-page container my-5">
-      <h2 className="text-center mb-4">Categories</h2>
-      <div className="row justify-content-center gy-3">
-        {categories.length === 0 ? (
-          <p>No categories available.</p>
-        ) : (
-          categories.map((category) => (
-            <div
+    <section className="max-w-6xl mx-auto my-10 px-4">
+      <h2 className="text-center text-3xl font-bold mb-6">Categories</h2>
+
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6 justify-items-center">
+        {categories.map((category) => {
+          const img = getCategoryImage(category);
+
+          return (
+            <Link
               key={category}
-              className="col-6 col-sm-6 col-md-4 col-lg-3 text-center"
-              style={{ cursor: "pointer" }}
-              onClick={() => router.push(`/categories/${category}`)}
+              href={`/categories/${encodeURIComponent(category)}`}
+              className="flex flex-col items-center cursor-pointer group"
             >
-              <div className="category-item">
+              <div className="w-24 h-24 rounded-full overflow-hidden shadow-md border border-gray-200 mb-2">
                 <img
-                  src={images[category] ?? "https://via.placeholder.com/150"}
+                  src={img}
                   alt={category}
-                  className="rounded-circle img-fluid category-image"
+                  className="w-full h-full object-cover transition-transform duration-200 group-hover:scale-105"
                 />
-                <p className="category-name mt-1">{category}</p>
               </div>
-            </div>
-          ))
-        )}
+              <p className="text-sm font-medium group-hover:text-orange-500">
+                {category}
+              </p>
+            </Link>
+          );
+        })}
       </div>
-    </div>
+    </section>
   );
 };
 

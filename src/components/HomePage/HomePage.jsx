@@ -1,19 +1,31 @@
-import Disclaimer from "../../Disclaimer/Disclaimer";
-import Footer from "../../Footer/Footer";
-import Header from "../../Header/Header";
-import Main from "../../Main/Main";
-import Navbar from "../../Navbar/Navbar";
+import HeaderClient from "@/components/HeaderClient/HeaderClient";
+import Navbar from "@/components/Navbar/Navbar";
+import Footer from "@/components/Footer/Footer";
+import Disclaimer from "@/components/Disclaimer/Disclaimer";
+import MainComponent from "@/components/MainComponent/MainComponent";
 
-const HomePage = ({ session }) => {
+import { getAllProductsAction } from "@/actions/product";
+import { getSession } from "@/lib/session";
+
+export default async function HomePage() {
+  // 🔹 SESSION dal cookie (SSR)
+  const session = await getSession();
+
+  // 🔹 PRODUCTS per header (SSR)
+  const data = await getAllProductsAction();
+  const products = data?.products || [];
+
   return (
     <>
       <Navbar session={session} />
-      <Header />
-      <Main />
+
+      {/* Header è client, quindi gli passo i prodotti */}
+      <HeaderClient products={products} />
+
+      <MainComponent session={session} />
+
       <Disclaimer />
       <Footer />
     </>
   );
-};
-
-export default HomePage;
+}

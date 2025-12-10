@@ -1,35 +1,35 @@
 "use client";
 
-import { useState, useEffect, useTransition } from "react";
-import Swal from "sweetalert2";
+import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
+import Swal from "sweetalert2";
 import { loginUserAction, logoutUserAction } from "@/actions/auth";
-import "./Login.css";
+import { FcGoogle } from "react-icons/fc";
 
-const Login = ({ closeDrawer, session }) => {
+export default function Login({ closeDrawer, session }) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
-  const [formData, setFormData] = useState({ email: "", password: "" });
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
 
-  const handleInput = (event) => {
-    const { name, value } = event.target;
+  const handleInput = (e) => {
     setFormData((prev) => ({
       ...prev,
-      [name]: value,
+      [e.target.name]: e.target.value,
     }));
   };
 
-  const onSubmit = (event) => {
-    event.preventDefault();
+  const onSubmit = (e) => {
+    e.preventDefault();
 
     if (!formData.email || !formData.password) {
       return Swal.fire({
         icon: "error",
         title: "Errore",
         text: "Inserisci email e password",
-        customClass: { popup: "swal-popup" },
-        zIndex: 999999,
       });
     }
 
@@ -39,21 +39,17 @@ const Login = ({ closeDrawer, session }) => {
       if (res.error) {
         return Swal.fire({
           icon: "error",
-          title: "Errore di Login",
+          title: "Errore di login",
           text: res.error,
-          customClass: { popup: "swal-popup" },
-          zIndex: 999999,
         });
       }
 
       Swal.fire({
         icon: "success",
-        title: `Benvenuto su Sicilian Taste, ${res.user.name}!`,
-        customClass: { popup: "swal-popup" },
-        zIndex: 999999,
+        title: `Benvenuto, ${res.user.name}!`,
       }).then(() => {
         closeDrawer?.();
-        router.refresh(); // ricarica i server components (Navbar con nuova session)
+        router.refresh();
       });
     });
   };
@@ -63,9 +59,7 @@ const Login = ({ closeDrawer, session }) => {
       await logoutUserAction();
       Swal.fire({
         icon: "success",
-        title: "Logout eseguito con successo",
-        customClass: { popup: "swal-popup" },
-        zIndex: 999999,
+        title: "Logout effettuato",
       }).then(() => {
         closeDrawer?.();
         router.refresh();
@@ -74,19 +68,22 @@ const Login = ({ closeDrawer, session }) => {
   };
 
   const redirectToGoogle = () => {
-    // Qui puoi usare una env pubblica, NON quella privata
-    const base = process.env.NEXT_PUBLIC_SERVER_BASE_URL;
-    window.location.href = `${base}/auth/google`;
+    window.location.href = `${process.env.NEXT_PUBLIC_SERVER_BASE_URL}/auth/google`;
   };
+
+  // --------------------------------------------
+  // SE L’UTENTE È GIÀ LOGGATO
+  // --------------------------------------------
 
   if (session) {
     return (
-      <div className="login-container">
-        <h2 className="login-title">Sei già loggato</h2>
+      <div className="p-6 flex flex-col items-center text-center">
+        <h2 className="text-2xl font-semibold mb-4">Sei già loggato</h2>
+
         <button
           onClick={handleLogout}
-          className="logout-button"
           disabled={isPending}
+          className="w-full py-2 px-4 rounded bg-red-500 hover:bg-red-600 text-white transition mt-3"
         >
           {isPending ? "Logout..." : "Logout"}
         </button>
@@ -94,42 +91,52 @@ const Login = ({ closeDrawer, session }) => {
     );
   }
 
+  // --------------------------------------------
+  // FORM DI LOGIN
+  // --------------------------------------------
+
   return (
-    <div className="login-container">
-      <h2 className="login-title">LOGIN</h2>
-      <form onSubmit={onSubmit} className="login-form">
-        <div className="form-group">
-          <input
-            type="email"
-            name="email"
-            placeholder="Email"
-            value={formData.email}
-            onChange={handleInput}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <input
-            type="password"
-            name="password"
-            placeholder="Password"
-            value={formData.password}
-            onChange={handleInput}
-            required
-          />
-        </div>
-        <button type="submit" className="login-button" disabled={isPending}>
+    <div className="p-6 w-full max-w-xs mx-auto">
+      <h2 className="text-2xl font-semibold text-center mb-6">Login</h2>
+
+      <form onSubmit={onSubmit} className="flex flex-col gap-4">
+        <input
+          type="email"
+          name="email"
+          placeholder="Email"
+          className="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-orange-400 outline-none"
+          value={formData.email}
+          onChange={handleInput}
+          required
+        />
+
+        <input
+          type="password"
+          name="password"
+          placeholder="Password"
+          className="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-orange-400 outline-none"
+          value={formData.password}
+          onChange={handleInput}
+          required
+        />
+
+        <button
+          type="submit"
+          disabled={isPending}
+          className="w-full bg-orange-500 hover:bg-orange-600 text-white rounded py-2 transition"
+        >
           {isPending ? "Caricamento..." : "Login"}
         </button>
       </form>
-      <p className="or-login-with">Or login with</p>
-      <div className="social-buttons">
-        <button className="google-button" onClick={redirectToGoogle}>
-          Google
-        </button>
-      </div>
+
+      <div className="text-center my-3 text-gray-500">Oppure</div>
+
+      <button
+        onClick={redirectToGoogle}
+        className="w-full border rounded py-2 flex items-center justify-center gap-2 hover:bg-gray-100 transition"
+      >
+        <FcGoogle size={24} /> Login con Google
+      </button>
     </div>
   );
-};
-
-export default Login;
+}
