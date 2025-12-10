@@ -11,19 +11,24 @@ import {
 } from "../../reducer/cartSlice";
 import { Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import useSession from "../../hooks/useSession"; // lo sistemeremo quando me lo mandi
+import useSession from "../../hooks/useSession";
 import "./OrderForm.css";
+
 import Navbar from "../Navbar/Navbar";
 import Footer from "../Footer/Footer";
 import Disclaimer from "../Disclaimer/Disclaimer";
+
 import { createOrderAction } from "@/actions/orders";
 
 const OrderForm = ({ cartItems, session }) => {
   const dispatch = useDispatch();
   const stripe = useStripe();
   const elements = useElements();
-  const clientSession = useSession(); // se vorrai passare session da server, puoi unirli
   const router = useRouter();
+
+  // session lato client (cookie)
+  const clientSession = useSession();
+  const userId = clientSession?._id || session?._id || null;
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [orderMessage, setOrderMessage] = useState("");
@@ -43,13 +48,8 @@ const OrderForm = ({ cartItems, session }) => {
   };
 
   const handleConfirmOrder = () => {
-    if (
-      !shippingAddress.fullName ||
-      !shippingAddress.street ||
-      !shippingAddress.city ||
-      !shippingAddress.postalCode ||
-      !shippingAddress.country
-    ) {
+    const missing = Object.values(shippingAddress).some((v) => !v.trim());
+    if (missing) {
       setOrderMessage("Compila tutti i campi dello shipping address.");
       return;
     }
@@ -58,14 +58,12 @@ const OrderForm = ({ cartItems, session }) => {
 
   const handleSubmitOrder = async () => {
     if (!stripe || !elements) {
-      console.error("Stripe o Elements non inizializzati");
+      console.error("Stripe non inizializzato");
       return;
     }
 
     setIsSubmitting(true);
     setOrderMessage("Elaborazione...");
-
-    const userId = clientSession?._id || session?._id || null;
 
     const orderData = {
       user: userId,
@@ -74,7 +72,7 @@ const OrderForm = ({ cartItems, session }) => {
           {
             product: item._id,
             quantity: item.quantity,
-            price: parseFloat(item.price.toString()),
+            price: parseFloat(item.price),
           },
         ],
         subTotal: (parseFloat(item.price) * item.quantity).toFixed(2),
@@ -83,27 +81,25 @@ const OrderForm = ({ cartItems, session }) => {
     };
 
     try {
+      // server action
       const res = await createOrderAction(orderData);
 
-      if (res.error) {
-        throw new Error(res.error);
-      }
+      if (res.error) throw new Error(res.error);
 
       const clientSecret = res.clientSecret;
 
-      const result = await stripe.confirmCardPayment(clientSecret, {
+      const paymentResult = await stripe.confirmCardPayment(clientSecret, {
         payment_method: { card: elements.getElement(CardElement) },
       });
 
-      if (result.error) {
-        setOrderMessage(`Errore nel pagamento: ${result.error.message}`);
-      } else if (result.paymentIntent.status === "succeeded") {
+      if (paymentResult.error) {
+        setOrderMessage(`Errore pagamento: ${paymentResult.error.message}`);
+      } else if (paymentResult.paymentIntent.status === "succeeded") {
         setOrderMessage("Pagamento effettuato con successo!");
         dispatch(clearCart());
-        setTimeout(() => router.push("/"), 2000);
+        setTimeout(() => router.push("/"), 1800);
       }
     } catch (error) {
-      console.error("Errore:", error);
       setOrderMessage(`Errore: ${error.message}`);
     } finally {
       setIsSubmitting(false);
@@ -111,23 +107,28 @@ const OrderForm = ({ cartItems, session }) => {
   };
 
   const cartTotal = cartItems
-    .reduce((total, item) => total + parseFloat(item.price) * item.quantity, 0)
+    .reduce((total, item) => total + item.price * item.quantity, 0)
     .toFixed(2);
 
   return (
     <>
       <Navbar session={session} />
+
       <div className="orderFormBody my-3">
         <h1>Carrello</h1>
 
-        {cartItems.length > 0 ? (
+        {cartItems.length === 0 ? (
+          <p>Il carrello è vuoto!</p>
+        ) : (
           <>
             <h2>Articoli nel Carrello</h2>
+
             {cartItems.map((item) => (
               <div key={item._id} className="cartItem">
                 <div className="cartItemDetails">
                   <h4>{item.name}</h4>
-                  <p>Prezzo unitario: €{parseFloat(item.price).toFixed(2)}</p>
+                  <p>Prezzo unitario: €{item.price.toFixed(2)}</p>
+
                   <div className="quantityControls">
                     <button
                       onClick={() => dispatch(decrementQuantity(item._id))}
@@ -136,7 +137,9 @@ const OrderForm = ({ cartItems, session }) => {
                     >
                       -
                     </button>
+
                     <span>{item.quantity}</span>
+
                     <button
                       onClick={() => dispatch(incrementQuantity(item._id))}
                       className="incrementButton"
@@ -144,18 +147,17 @@ const OrderForm = ({ cartItems, session }) => {
                       +
                     </button>
                   </div>
-                  <p>
-                    Prezzo totale: €
-                    {(parseFloat(item.price) * item.quantity).toFixed(2)}
-                  </p>
+
+                  <p>Totale: €{(item.price * item.quantity).toFixed(2)}</p>
+
                   <button
                     onClick={() => dispatch(removeFromCart(item._id))}
                     className="removeButton"
-                    aria-label="Rimuovi elemento"
                   >
                     <Trash2 size="24" color="#ff4d4f" />
                   </button>
                 </div>
+
                 {item.img && (
                   <img
                     src={item.img}
@@ -168,54 +170,24 @@ const OrderForm = ({ cartItems, session }) => {
 
             {!isConfirmed ? (
               <>
-                <div className="my-2">
-                  <h3>Inserisci il tuo indirizzo di spedizione</h3>
-                  <form
-                    className="shippingForm"
-                    onSubmit={(e) => e.preventDefault()}
-                  >
+                <h3>Indirizzo di spedizione</h3>
+                <form
+                  className="shippingForm"
+                  onSubmit={(e) => e.preventDefault()}
+                >
+                  {Object.keys(shippingAddress).map((field) => (
                     <input
+                      key={field}
                       type="text"
-                      name="fullName"
-                      placeholder="Nome completo"
-                      value={shippingAddress.fullName}
+                      name={field}
+                      placeholder={field}
+                      value={shippingAddress[field]}
                       onChange={handleInputChange}
                       required
                     />
-                    <input
-                      type="text"
-                      name="street"
-                      placeholder="Via"
-                      value={shippingAddress.street}
-                      onChange={handleInputChange}
-                      required
-                    />
-                    <input
-                      type="text"
-                      name="city"
-                      placeholder="Città"
-                      value={shippingAddress.city}
-                      onChange={handleInputChange}
-                      required
-                    />
-                    <input
-                      type="text"
-                      name="postalCode"
-                      placeholder="CAP"
-                      value={shippingAddress.postalCode}
-                      onChange={handleInputChange}
-                      required
-                    />
-                    <input
-                      type="text"
-                      name="country"
-                      placeholder="Paese"
-                      value={shippingAddress.country}
-                      onChange={handleInputChange}
-                      required
-                    />
-                  </form>
-                </div>
+                  ))}
+                </form>
+
                 <button onClick={handleConfirmOrder} className="button">
                   Conferma Ordine (€{cartTotal})
                 </button>
@@ -224,6 +196,7 @@ const OrderForm = ({ cartItems, session }) => {
               <>
                 <h3>Pagamento</h3>
                 <CardElement className="cardElement" />
+
                 <button
                   onClick={handleSubmitOrder}
                   disabled={isSubmitting}
@@ -234,12 +207,11 @@ const OrderForm = ({ cartItems, session }) => {
               </>
             )}
           </>
-        ) : (
-          <p>Il carrello è vuoto!</p>
         )}
 
         {orderMessage && <p className="statusMessage">{orderMessage}</p>}
       </div>
+
       <Disclaimer />
       <Footer />
     </>
