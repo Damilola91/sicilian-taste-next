@@ -1,47 +1,57 @@
 import Link from "next/link";
-
 import { Facebook, Twitter, Instagram, Youtube } from "lucide-react";
 
-export default function Footer() {
+const Footer = () => {
   return (
-    <footer className="footer d-flex">
-      <div className="container">
-        <div className="row p-3 align-items-center">
+    <footer className="bg-gray-900 text-gray-300 mt-10">
+      <div className="max-w-6xl mx-auto px-6 py-12">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
           {/* LOGO + QUOTE */}
-          <div className="col-lg-6 col-md-6">
-            <h2 className="footer-logo">SicilianTaste</h2>
-            <p className="footer-quote">
-              "On the other hand,
-              <br />
-              we denounce with righteous
-              <br />
-              indignation and dislike men
-              <br />
-              who are so beguiled."
+          <div>
+            <h2 className="text-3xl font-extrabold text-orange-500 mb-3">
+              SicilianTaste
+            </h2>
+            <p className="text-sm leading-relaxed text-gray-400">
+              “On the other hand, we denounce with righteous indignation and
+              dislike men who are so beguiled.”
             </p>
           </div>
 
           {/* COLUMN 1 */}
-          <div className="col-lg-2 col-md-2 col-sm-6">
-            <h5 className="footer-heading">SicilianTaste</h5>
-            <ul className="list-unstyled">
+          <div>
+            <h4 className="text-lg font-semibold text-white mb-3">
+              SicilianTaste
+            </h4>
+            <ul className="space-y-2 text-sm">
               <li>
-                <a href="#about" className="footer-link">
+                <a
+                  href="#about"
+                  className="hover:text-orange-400 transition-colors"
+                >
                   About us
                 </a>
               </li>
               <li>
-                <a href="#careers" className="footer-link">
+                <a
+                  href="#careers"
+                  className="hover:text-orange-400 transition-colors"
+                >
                   Careers
                 </a>
               </li>
               <li>
-                <Link href="/contact" className="footer-link">
+                <Link
+                  href="/contact"
+                  className="hover:text-orange-400 transition-colors"
+                >
                   Contact Us
                 </Link>
               </li>
               <li>
-                <a href="#feedback" className="footer-link">
+                <a
+                  href="#feedback"
+                  className="hover:text-orange-400 transition-colors"
+                >
                   Feedback
                 </a>
               </li>
@@ -49,92 +59,85 @@ export default function Footer() {
           </div>
 
           {/* COLUMN 2 */}
-          <div className="col-lg-2 col-md-2 col-sm-6">
-            <h5 className="footer-heading">Legal</h5>
-            <ul className="list-unstyled">
+          <div>
+            <h4 className="text-lg font-semibold text-white mb-3">Legal</h4>
+            <ul className="space-y-2 text-sm">
               <li>
-                <a href="#terms" className="footer-link">
+                <a
+                  href="#terms"
+                  className="hover:text-orange-400 transition-colors"
+                >
                   Terms
                 </a>
               </li>
               <li>
-                <a href="#conditions" className="footer-link">
+                <a
+                  href="#conditions"
+                  className="hover:text-orange-400 transition-colors"
+                >
                   Conditions
                 </a>
               </li>
               <li>
-                <a href="#cookies" className="footer-link">
+                <a
+                  href="#cookies"
+                  className="hover:text-orange-400 transition-colors"
+                >
                   Cookies
                 </a>
               </li>
               <li>
-                <a href="#copyright" className="footer-link">
+                <a
+                  href="#copyright"
+                  className="hover:text-orange-400 transition-colors"
+                >
                   Copyright
                 </a>
               </li>
             </ul>
           </div>
 
-          {/* SOCIAL FOLLOW */}
-          <div className="col-lg-2 col-md-2 col-sm-6">
-            <h5 className="footer-heading">Follow</h5>
-            <ul className="list-unstyled">
-              <li>
-                <a href="#facebook" className="footer-link">
-                  Facebook
-                </a>
-              </li>
-              <li>
-                <a href="#twitter" className="footer-link">
-                  Twitter
-                </a>
-              </li>
-              <li>
-                <a href="#instagram" className="footer-link">
-                  Instagram
-                </a>
-              </li>
-              <li>
-                <a href="#youtube" className="footer-link">
-                  Youtube
-                </a>
-              </li>
-            </ul>
-          </div>
-        </div>
-
-        {/* HR */}
-        <div className="row">
-          <div className="col-12">
-            <hr />
-          </div>
-        </div>
-
-        {/* COPYRIGHT + SOCIAL ICONS */}
-        <div className="row align-items-center">
-          <div className="col-lg-6 col-md-6 text-start">
-            <p className="footer-copyright">
-              &copy; 2024 SicilianTaste - All rights reserved
-            </p>
-          </div>
-          <div className="col-lg-6 col-md-6 text-end">
-            <div className="footer-icons">
-              <a href="#facebook" className="icon-link">
-                <Facebook size={24} />
+          {/* SOCIAL */}
+          <div>
+            <h4 className="text-lg font-semibold text-white mb-3">Follow</h4>
+            <div className="flex gap-4 mt-2">
+              <a
+                href="#facebook"
+                className="hover:text-orange-400 transition-colors"
+              >
+                <Facebook size={22} />
               </a>
-              <a href="#twitter" className="icon-link">
-                <Twitter size={24} />
+              <a
+                href="#twitter"
+                className="hover:text-orange-400 transition-colors"
+              >
+                <Twitter size={22} />
               </a>
-              <a href="#instagram" className="icon-link">
-                <Instagram size={24} />
+              <a
+                href="#instagram"
+                className="hover:text-orange-400 transition-colors"
+              >
+                <Instagram size={22} />
               </a>
-              <a href="#youtube" className="icon-link">
-                <Youtube size={24} />
+              <a
+                href="#youtube"
+                className="hover:text-orange-400 transition-colors"
+              >
+                <Youtube size={22} />
               </a>
             </div>
           </div>
         </div>
+
+        {/* Divider */}
+        <div className="border-t border-gray-700 mt-10 pt-6 text-center">
+          <p className="text-sm text-gray-500">
+            © {new Date().getFullYear()} SicilianTaste — All rights reserved.
+          </p>
+        </div>
       </div>
     </footer>
   );
-}
+};
+
+export default Footer;

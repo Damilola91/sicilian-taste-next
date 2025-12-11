@@ -20,23 +20,29 @@ export default async function PopularCategories() {
   }
 
   return (
-    <section className="text-center mb-10">
-      <h2 className="text-3xl font-bold mb-6">Popular Categories</h2>
+    <section className="mx-auto max-w-4xl">
+      <h2 className="text-3xl font-bold mb-8 text-center text-orange-600">
+        Popular Categories
+      </h2>
 
-      <div className="flex justify-center flex-wrap gap-6 mt-4">
+      <div className="flex justify-center flex-wrap gap-10">
         {categoriesToShow.map((category) => (
           <form action={goToCategory} key={category}>
             <input type="hidden" name="category" value={category} />
 
-            <button type="submit" className="flex flex-col items-center">
-              <div className="w-20 h-20 overflow-hidden rounded-full shadow-md hover:scale-105 transition">
+            <button
+              type="submit"
+              className="flex flex-col items-center hover:text-orange-500 transition"
+            >
+              <div className="w-24 h-24 rounded-full overflow-hidden shadow-md hover:scale-105 transition">
                 <img
                   src={getCategoryImage(category)}
                   alt={category}
                   className="w-full h-full object-cover"
                 />
               </div>
-              <p className="mt-2 font-medium">{category}</p>
+
+              <p className="mt-3 font-semibold capitalize">{category}</p>
             </button>
           </form>
         ))}

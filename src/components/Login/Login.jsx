@@ -78,12 +78,12 @@ export default function Login({ closeDrawer, session }) {
   if (session) {
     return (
       <div className="p-6 flex flex-col items-center text-center">
-        <h2 className="text-2xl font-semibold mb-4">Sei già loggato</h2>
+        <h2 className="text-xl font-bold mb-4">Sei già loggato</h2>
 
         <button
           onClick={handleLogout}
           disabled={isPending}
-          className="w-full py-2 px-4 rounded bg-red-500 hover:bg-red-600 text-white transition mt-3"
+          className="w-full py-2 px-4 rounded bg-orange-500 hover:bg-orange-600 text-white transition disabled:bg-gray-300"
         >
           {isPending ? "Logout..." : "Logout"}
         </button>
@@ -96,15 +96,20 @@ export default function Login({ closeDrawer, session }) {
   // --------------------------------------------
 
   return (
-    <div className="p-6 w-full max-w-xs mx-auto">
-      <h2 className="text-2xl font-semibold text-center mb-6">Login</h2>
+    <div className="bg-white w-full max-w-sm mx-auto p-6 rounded-xl shadow-md">
+      <h2
+        className="text-2xl font-bold text-center mb-6"
+        style={{ fontFamily: "'Playfair Display', serif" }}
+      >
+        Login
+      </h2>
 
       <form onSubmit={onSubmit} className="flex flex-col gap-4">
         <input
           type="email"
           name="email"
           placeholder="Email"
-          className="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-orange-400 outline-none"
+          className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-orange-400 focus:border-orange-400 outline-none"
           value={formData.email}
           onChange={handleInput}
           required
@@ -114,29 +119,49 @@ export default function Login({ closeDrawer, session }) {
           type="password"
           name="password"
           placeholder="Password"
-          className="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-orange-400 outline-none"
+          className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-orange-400 focus:border-orange-400 outline-none"
           value={formData.password}
           onChange={handleInput}
           required
         />
 
+        {/* forgot password */}
+        <a
+          href="/forgot-password"
+          className="text-xs text-orange-500 ml-auto hover:underline"
+        >
+          Password dimenticata?
+        </a>
+
         <button
           type="submit"
           disabled={isPending}
-          className="w-full bg-orange-500 hover:bg-orange-600 text-white rounded py-2 transition"
+          className="w-full bg-orange-500 hover:bg-orange-600 text-white rounded-lg py-2 transition disabled:bg-gray-300"
         >
           {isPending ? "Caricamento..." : "Login"}
         </button>
       </form>
 
-      <div className="text-center my-3 text-gray-500">Oppure</div>
+      <div className="text-center my-4 text-gray-500 text-sm">Oppure</div>
 
+      {/* GOOGLE BUTTON */}
       <button
         onClick={redirectToGoogle}
-        className="w-full border rounded py-2 flex items-center justify-center gap-2 hover:bg-gray-100 transition"
+        className="w-full border border-gray-300 rounded-lg py-2 flex items-center justify-center gap-2 bg-white hover:bg-gray-100 transition"
       >
-        <Chrome size={24} /> Login con Google
+        <Chrome size={22} /> Login con Google
       </button>
+
+      {/* SIGNUP TEXT */}
+      <p className="text-center text-sm mt-4">
+        Non hai un account?{" "}
+        <a
+          href="/signup"
+          className="text-orange-500 font-semibold hover:underline"
+        >
+          Registrati
+        </a>
+      </p>
     </div>
   );
 }

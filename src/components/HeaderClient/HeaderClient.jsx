@@ -6,7 +6,6 @@ export default function HeaderClient({ products }) {
   const [index, setIndex] = useState(0);
 
   const prev = () => setIndex((i) => (i === 0 ? products.length - 1 : i - 1));
-
   const next = () => setIndex((i) => (i === products.length - 1 ? 0 : i + 1));
 
   if (!products || products.length === 0)
@@ -15,38 +14,80 @@ export default function HeaderClient({ products }) {
   const product = products[index];
 
   return (
-    <header className="relative w-full h-[380px] md:h-[500px] overflow-hidden">
-      {/* Background Image */}
+    <header className="w-full px-5 mt-6">
       <div
-        className="w-full h-full bg-cover bg-center transition-all duration-500"
-        style={{ backgroundImage: `url(${product.img})` }}
+        className="
+        relative w-full h-[250px] sm:h-[350px] md:h-[500px] 
+        rounded-xl overflow-hidden shadow-lg
+      "
       >
-        {/* gradient overlay */}
-        <div className="w-full h-full bg-black/40 flex flex-col justify-center items-start px-6 md:px-12">
-          <p className="text-white text-lg md:text-xl max-w-xl drop-shadow">
-            {product.description}
-          </p>
-          <h1 className="text-white text-3xl md:text-5xl font-bold drop-shadow mt-3">
-            {product.name}
-          </h1>
+        {/* BACKGROUND IMAGE */}
+        <div
+          className="
+            w-full h-full bg-cover bg-center 
+            transition-all duration-500
+          "
+          style={{ backgroundImage: `url(${product.img})` }}
+        >
+          {/* OVERLAY */}
+          <div
+            className="
+              w-full h-full 
+              bg-black/40 
+              flex flex-col justify-end
+              px-6 py-8
+            "
+          >
+            <p className="text-white text-sm sm:text-base md:text-lg max-w-xl drop-shadow">
+              {product.description}
+            </p>
+
+            <h1
+              className="
+              text-white 
+              text-xl sm:text-3xl md:text-5xl 
+              font-bold drop-shadow mt-2
+            "
+            >
+              {product.name}
+            </h1>
+          </div>
         </div>
+
+        {/* LEFT ARROW */}
+        <button
+          onClick={prev}
+          className="
+            absolute top-1/2 left-3 -translate-y-1/2 
+            bg-black/50 hover:bg-black/70 
+            text-white 
+            flex items-center justify-center
+            w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12
+            rounded-full 
+            text-lg sm:text-xl 
+            transition
+          "
+        >
+          ‹
+        </button>
+
+        {/* RIGHT ARROW */}
+        <button
+          onClick={next}
+          className="
+            absolute top-1/2 right-3 -translate-y-1/2 
+            bg-black/50 hover:bg-black/70 
+            text-white 
+            flex items-center justify-center
+            w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12
+            rounded-full 
+            text-lg sm:text-xl 
+            transition
+          "
+        >
+          ›
+        </button>
       </div>
-
-      {/* Left arrow */}
-      <button
-        onClick={prev}
-        className="absolute top-1/2 left-4 -translate-y-1/2 bg-black/50 text-white w-10 h-10 rounded-full flex items-center justify-center text-2xl hover:bg-black/70 transition"
-      >
-        ‹
-      </button>
-
-      {/* Right arrow */}
-      <button
-        onClick={next}
-        className="absolute top-1/2 right-4 -translate-y-1/2 bg-black/50 text-white w-10 h-10 rounded-full flex items-center justify-center text-2xl hover:bg-black/70 transition"
-      >
-        ›
-      </button>
     </header>
   );
 }
