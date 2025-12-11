@@ -66,13 +66,15 @@ export const getProductsByCategoryAction = async ({
   }
 
   const res = await fetch(
-    `${API}/products/category/${encodeURIComponent(
+    `${API}/products/search/${encodeURIComponent(
       category
     )}?page=${page}&pageSize=${pageSize}`,
     { cache: "no-store" }
   );
 
   if (!res.ok) {
+    const errorText = await res.text();
+    console.error("Errore backend:", errorText);
     throw new Error("Errore nel recupero dei prodotti della categoria");
   }
 
