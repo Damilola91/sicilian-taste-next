@@ -2,7 +2,7 @@
 
 import { cookies } from "next/headers";
 
-const API = process.env.API_BASE_URL; // ❗SERVER ONLY
+const API = process.env.API_BASE_URL;
 
 export const loginUserAction = async ({ email, password }) => {
   try {
@@ -18,7 +18,6 @@ export const loginUserAction = async ({ email, password }) => {
       return { error: data.message || "Credenziali non valide" };
     }
 
-    // ⬇⬇⬇ FIX: cookies() must be awaited!
     const cookieStore = await cookies();
 
     cookieStore.set("token", data.token, {
@@ -26,7 +25,7 @@ export const loginUserAction = async ({ email, password }) => {
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
       path: "/",
-      maxAge: 60 * 60 * 24 * 7, // 7 giorni
+      maxAge: 60 * 60 * 24 * 7,
     });
 
     return { success: true, user: data.user };

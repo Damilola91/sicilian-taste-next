@@ -17,7 +17,7 @@ export async function getSession() {
     return {
       token,
       role: decoded.role,
-      id: decoded.id,
+      id: decoded._id,
       name: decoded.name,
       email: decoded.email,
       exp: decoded.exp,

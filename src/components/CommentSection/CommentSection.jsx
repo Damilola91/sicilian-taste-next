@@ -31,7 +31,7 @@ export default function CommentSection({ productId, session }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const userId = session?._id || session?.id;
+    const userId = session?.id;
     if (!userId) return alert("Devi essere loggato per commentare!");
 
     if (!comment.trim() || rating === 0) {
