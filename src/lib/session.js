@@ -3,7 +3,7 @@
 import { cookies } from "next/headers";
 import jwt from "jsonwebtoken";
 
-const SECRET = process.env.JWT_SECRET; // usa lo stesso segreto del backend
+const SECRET = process.env.JWT_SECRET;
 
 export async function getSession() {
   const cookieStore = await cookies();

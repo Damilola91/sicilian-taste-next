@@ -43,61 +43,77 @@ export default function SuperDeliciousClient({ products }) {
           </p>
         )}
 
-        {products.map((product) => (
-          <div
-            key={product._id}
-            className="bg-white border rounded-xl shadow-md hover:shadow-xl transition p-4 flex flex-col justify-between"
-          >
-            {/* IMAGE */}
+        {products.map((product) => {
+          // FIX STOCK universale per stock
+          const stock =
+            typeof product.availableInStock === "object"
+              ? parseFloat(product.availableInStock.$numberDecimal)
+              : product.availableInStock ??
+                product.available ??
+                product.stock ??
+                0;
+
+          return (
             <div
-              className="w-full h-48 rounded-lg overflow-hidden mb-3 cursor-pointer"
-              onClick={() => router.push(`/recipe/${product._id}`)}
+              key={product._id}
+              className="bg-white border rounded-xl shadow-md hover:shadow-xl transition p-4 flex flex-col justify-between"
             >
-              <img
-                src={product.img}
-                alt={product.name}
-                className="w-full h-full object-cover"
-              />
-            </div>
-
-            {/* TITLE */}
-            <h3 className="font-semibold text-lg truncate">{product.name}</h3>
-
-            {/* DESCRIPTION (2 righe max) */}
-            <p className="text-sm text-gray-600 mt-1 line-clamp-2">
-              {product.description}
-            </p>
-
-            {/* PRICE */}
-            <p className="mt-3 font-bold text-gray-800 text-lg">
-              €{product.price}
-            </p>
-
-            {/* ⭐ RATING */}
-            <div className="flex gap-1 my-3">
-              {[1, 2, 3, 4, 5].map((num) => (
-                <Star
-                  key={num}
-                  size={22}
-                  className={`cursor-pointer transition ${
-                    (selectedRating[product._id] || 0) >= num
-                      ? "text-yellow-400"
-                      : "text-gray-300"
-                  }`}
-                  onClick={() => handleRating(product._id, num)}
+              {/* IMAGE */}
+              <div
+                className="w-full h-48 rounded-lg overflow-hidden mb-3 cursor-pointer"
+                onClick={() => router.push(`/recipe/${product._id}`)}
+              >
+                <img
+                  src={product.img}
+                  alt={product.name}
+                  className="w-full h-full object-cover"
                 />
-              ))}
-            </div>
+              </div>
 
-            {/* BUTTON */}
-            <button
-              className="w-full bg-orange-500 hover:bg-orange-600 text-white py-2 mt-auto rounded-lg font-medium transition shadow"
-              onClick={() => handleAddToCart(product)}
-            >
-              Aggiungi al carrello
-            </button>
-          </div>
-        ))}
+              {/* TITLE */}
+              <h3 className="font-semibold text-lg truncate">{product.name}</h3>
+
+              {/* DESCRIPTION */}
+              <p className="text-sm text-gray-600 mt-1 line-clamp-2">
+                {product.description}
+              </p>
+
+              {/* PRICE */}
+              <p className="mt-3 font-bold text-gray-800 text-lg">
+                €{product.price}
+              </p>
+
+              {/* ⭐ RATING */}
+              <div className="flex gap-1 my-3">
+                {[1, 2, 3, 4, 5].map((num) => (
+                  <Star
+                    key={num}
+                    size={22}
+                    className={`cursor-pointer transition ${
+                      (selectedRating[product._id] || 0) >= num
+                        ? "text-yellow-400"
+                        : "text-gray-300"
+                    }`}
+                    onClick={() => handleRating(product._id, num)}
+                  />
+                ))}
+              </div>
+
+              {/* STOCK */}
+              <p className="mt-3 font-bold text-green-800 text-lg">
+                Available: {stock}
+              </p>
+
+              {/* BUTTON */}
+              <button
+                className="w-full bg-orange-500 hover:bg-orange-600 text-white py-2 mt-auto rounded-lg font-medium transition shadow"
+                onClick={() => handleAddToCart(product)}
+              >
+                Aggiungi al carrello
+              </button>
+            </div>
+          );
+        })}
       </div>
     </section>
   );

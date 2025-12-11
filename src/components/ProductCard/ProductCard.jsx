@@ -8,20 +8,16 @@ import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
 
 import { addReviewAction, getReviewsByProductAction } from "@/actions/reviews";
-import { getSession } from "@/lib/session";
 
-const ProductCard = ({ product }) => {
+const ProductCard = ({ product, session }) => {
   const dispatch = useDispatch();
   const router = useRouter();
-  const session = getSession();
 
   const [reviews, setReviews] = useState([]);
   const [userRating, setUserRating] = useState(0);
   const [loadingReviews, setLoadingReviews] = useState(true);
 
-  /* ---------------------------------------------
-     1️⃣ CARICA LE RECENSIONI DEL PRODOTTO  
-  ------------------------------------------------*/
+  // 1️⃣ Carica recensioni
   useEffect(() => {
     if (!product?._id) return;
 
@@ -39,9 +35,7 @@ const ProductCard = ({ product }) => {
     loadReviews();
   }, [product]);
 
-  /* ---------------------------------------------
-     2️⃣ CALCOLA LA MEDIA DELLE RECENSIONI  
-  ------------------------------------------------*/
+  // 2️⃣ Media rating
   const averageRating =
     reviews.length > 0
       ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length
@@ -49,9 +43,7 @@ const ProductCard = ({ product }) => {
 
   const displayedRating = userRating || averageRating;
 
-  /* ---------------------------------------------
-     3️⃣ AGGIUNTA AL CARRELLO
-  ------------------------------------------------*/
+  // 3️⃣ Aggiunta al carrello
   const handleAddToCart = () => {
     const productToAdd = {
       _id: product._id,
@@ -70,9 +62,7 @@ const ProductCard = ({ product }) => {
     });
   };
 
-  /* ---------------------------------------------
-     4️⃣ CLICK SUL RATING → CREA RECENSIONE
-  ------------------------------------------------*/
+  // 4️⃣ Click sulle stelle → rating
   const handleRating = async (ratingValue) => {
     if (!session?.id) {
       Swal.fire({
@@ -85,7 +75,7 @@ const ProductCard = ({ product }) => {
 
     const payload = {
       productId: product._id,
-      comment: "", // la card non gestisce commenti, solo rating
+      comment: "",
       rating: ratingValue,
       userId: session.id,
     };
@@ -93,10 +83,8 @@ const ProductCard = ({ product }) => {
     try {
       await addReviewAction(payload);
 
-      // aggiorno UI subito
       setUserRating(ratingValue);
 
-      // aggiorno recensioni reali
       const updated = await getReviewsByProductAction(product._id);
       setReviews(updated.reviews || []);
 
@@ -115,59 +103,62 @@ const ProductCard = ({ product }) => {
     }
   };
 
-  /* ---------------------------------------------
-     5️⃣ NAVIGAZIONE A RECIPE PAGE
-  ------------------------------------------------*/
+  // 5️⃣ Vai alla RecipePage
   const goToRecipePage = () => router.push(`/recipe/${product._id}`);
 
-  /* ---------------------------------------------
-     JSX DELLA CARD
-  ------------------------------------------------*/
   return (
-    <div className="product-card-container">
-      <div className="product-card">
-        <div className="product-card-inner">
-          <img
-            src={product.img}
-            alt={product.name}
-            className="product-card-img"
-            onClick={goToRecipePage}
-          />
+    <div className="flex flex-col bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden h-full">
+      {/* Immagine */}
+      <img
+        src={product.img}
+        alt={product.name}
+        className="w-full h-48 object-cover border-b border-gray-200 cursor-pointer hover:opacity-90 transition"
+        onClick={goToRecipePage}
+      />
 
-          <div className="product-card-body">
-            <h5 className="product-card-title">{product.name}</h5>
-            <p className="product-card-description">{product.description}</p>
+      {/* Corpo card */}
+      <div className="flex flex-col flex-1 p-4">
+        {/* Titolo */}
+        <h5 className="text-lg font-semibold mb-1 truncate">{product.name}</h5>
 
-            <div className="product-card-price">
-              Price: €{parseFloat(product.price.$numberDecimal).toFixed(2)}
-            </div>
+        {/* Descrizione */}
+        <p className="text-sm text-gray-600 mb-3 line-clamp-2">
+          {product.description}
+        </p>
 
-            {/* ⭐ RATING */}
-            <div className="product-card-rating">
-              {[...Array(5)].map((_, i) => (
-                <span
-                  key={i}
-                  className={
-                    i < displayedRating
-                      ? "product-card-full-star selected"
-                      : "product-card-empty-star"
-                  }
-                  onClick={() => handleRating(i + 1)}
-                >
-                  <Star />
-                </span>
-              ))}
-            </div>
-
-            <p className="product-card-stock">
-              Available: {parseFloat(product.availableInStock.$numberDecimal)}
-            </p>
-
-            <button className="product-card-button" onClick={handleAddToCart}>
-              Aggiungi al carrello
-            </button>
-          </div>
+        {/* Prezzo */}
+        <div className="text-base font-bold text-gray-800 mb-2">
+          Price: €{parseFloat(product.price.$numberDecimal).toFixed(2)}
         </div>
+
+        {/* Rating */}
+        <div className="flex items-center gap-1 mb-2">
+          {[...Array(5)].map((_, i) => (
+            <button
+              key={i}
+              type="button"
+              onClick={() => handleRating(i + 1)}
+              className={`cursor-pointer ${
+                i < displayedRating ? "text-yellow-400" : "text-gray-300"
+              }`}
+            >
+              <Star className="w-5 h-5" />
+            </button>
+          ))}
+        </div>
+
+        {/* Disponibilità */}
+        <p className="text-sm text-green-700 text-center mt-auto">
+          Available: {parseFloat(product.availableInStock.$numberDecimal)}
+        </p>
+
+        {/* Bottone carrello */}
+        <button
+          className="mt-3 w-full bg-orange-500 hover:bg-orange-600 text-white text-sm font-medium py-2 rounded-md transition-colors"
+          onClick={handleAddToCart}
+        >
+          Aggiungi al carrello
+        </button>
       </div>
     </div>
   );

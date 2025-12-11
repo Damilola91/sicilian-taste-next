@@ -1,6 +1,6 @@
 "use server";
 
-const API = process.env.NEXT_PUBLIC_API_BASE_URL;
+const API = process.env.API_BASE_URL;
 
 export const sendContactEmailAction = async ({ from, subject, text }) => {
   try {
