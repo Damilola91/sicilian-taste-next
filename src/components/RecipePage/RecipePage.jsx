@@ -1,20 +1,30 @@
 import Navbar from "../Navbar/Navbar";
 import Footer from "../Footer/Footer";
-import RecipeHeader from "./RecipeHeader";
-import RecipeDetails from "./RecipeDetails";
-import SimilarRecipes from "./SimilarRecipes";
-import CommentsSection from "./CommentSection";
+import RecipeHeader from "../RecipeHeader/RecipeHeader";
+import RecipeDetails from "../RecipeDetails/RecipeDetails";
+import SimilarRecipes from "../SimilarRecipes/SimilarRecipes";
+import CommentSection from "../CommentSection/CommentSection";
 import Disclaimer from "../Disclaimer/Disclaimer";
-import "./RecipePage.css";
 
-const RecipePage = ({ session, product, isLoading, error, similarRecipes }) => {
+const RecipePage = ({
+  session,
+  product,
+  isLoading = false,
+  error = "",
+  similarRecipes = [],
+}) => {
   return (
     <>
       <Navbar session={session} />
 
-      <div className="container mt-5">
-        {isLoading && <p>Loading...</p>}
-        {error && <p className="text-danger">{error}</p>}
+      <div className="max-w-6xl mx-auto px-4 py-10">
+        {isLoading && (
+          <p className="text-center text-gray-500 mb-4">Loading...</p>
+        )}
+
+        {error && !isLoading && (
+          <p className="text-center text-red-500 mb-6">{error}</p>
+        )}
 
         {product ? (
           <>
@@ -25,20 +35,26 @@ const RecipePage = ({ session, product, isLoading, error, similarRecipes }) => {
             />
 
             <RecipeDetails
-              ingredients={{ crust: product.ingredients }}
-              recipe={product.recipe.split(".").map((step) => step.trim())}
-              nutritionFacts={product.nutritionFacts}
+              ingredients={{ crust: product.ingredients || [] }}
+              recipe={
+                (product.recipe || "")
+                  .split(".")
+                  .map((step) => step.trim())
+                  .filter(Boolean) // niente step vuoti
+              }
+              nutritionFacts={product.nutritionFacts || {}}
             />
 
             <SimilarRecipes recipes={similarRecipes} />
 
-            <hr style={{ borderTop: "3px solid orange" }} />
+            <div className="border-t border-orange-300 my-10" />
 
-            {/* 🔥 Commenti come nel progetto originale */}
-            <CommentsSection productId={product._id} session={session} />
+            <CommentSection productId={product._id} session={session} />
           </>
         ) : (
-          !isLoading && <p>No products available.</p>
+          !isLoading && (
+            <p className="text-center text-gray-600">No products available.</p>
+          )
         )}
       </div>
 

@@ -1,74 +1,35 @@
-import Navbar from "@/components/Navbar/Navbar";
-import Footer from "@/components/Footer/Footer";
-import Disclaimer from "@/components/Disclaimer/Disclaimer";
-import RecipeHeader from "@/components/RecipePage/RecipeHeader";
-import RecipeDetails from "@/components/RecipePage/RecipeDetails";
-import SimilarRecipes from "@/components/RecipePage/SimilarRecipes";
-import CommentSection from "@/components/RecipePage/CommentSection";
-
-import { getProductByIdAction } from "@/actions/product";
-import { getReviewsByProductAction } from "@/actions/reviews";
+import RecipePage from "@/components/RecipePage/RecipePage";
+import { getProductByIdAction, getAllProductsAction } from "@/actions/product";
 import { getSession } from "@/lib/session";
 
-export const dynamic = "force-dynamic";
-
-export default async function RecipePage({ params }) {
-  const { id } = params;
-
-  // ✔ usa il tuo getSession() corretto
+export default async function RecipeDetailPage({ params }) {
+  const { id } = await params;
   const session = await getSession();
 
+  // 🟠 1) prendo il prodotto richiesto
   let product = null;
+  let error = null;
+
   try {
-    product = await getProductByIdAction(id);
-  } catch (e) {
-    product = null;
+    const data = await getProductByIdAction(id);
+    product = data.product || data;
+  } catch (err) {
+    error = "Product not found";
   }
 
-  let initialReviews = [];
-  try {
-    const data = await getReviewsByProductAction(id);
-    initialReviews = data.reviews || [];
-  } catch (e) {}
+  // 🟠 2) tutti i prodotti per similar recipes
+  const all = await getAllProductsAction();
+  const allProducts = all.products || [];
 
-  if (!product) {
-    return (
-      <div className="p-10 text-center">
-        <h1 className="text-3xl font-semibold">Product not found</h1>
-      </div>
-    );
-  }
+  const similarRecipes = allProducts.filter((p) => p._id !== id).slice(0, 6);
 
   return (
-    <>
-      <Navbar session={session} />
-
-      <main className="container mx-auto mt-10 px-4">
-        <RecipeHeader
-          name={product.name}
-          img={product.img}
-          description={product.description}
-        />
-
-        <RecipeDetails
-          ingredients={{ crust: product.ingredients }}
-          recipe={product.recipe?.split(".").map((s) => s.trim()) || []}
-          nutritionFacts={product.nutritionFacts}
-        />
-
-        <SimilarRecipes currentProductId={product._id} />
-
-        <hr className="my-10 border-t-4 border-orange-400" />
-
-        <CommentSection
-          productId={product._id}
-          session={session}
-          initialReviews={initialReviews}
-        />
-      </main>
-
-      <Disclaimer />
-      <Footer />
-    </>
+    <RecipePage
+      session={session}
+      product={product}
+      isLoading={false}
+      error={error}
+      similarRecipes={similarRecipes}
+    />
   );
 }

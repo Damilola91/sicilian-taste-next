@@ -12,7 +12,6 @@ export default function CommentSection({ productId, session }) {
   const [rating, setRating] = useState(0);
   const [submitStatus, setSubmitStatus] = useState("");
 
-  // 🔥 Carica recensioni dal backend via server-action
   const loadReviews = async () => {
     try {
       setLoading(true);
@@ -29,7 +28,6 @@ export default function CommentSection({ productId, session }) {
     if (productId) loadReviews();
   }, [productId]);
 
-  // ⭐ invio commento
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -48,9 +46,7 @@ export default function CommentSection({ productId, session }) {
         userId,
       });
 
-      // Aggiorno lista senza ricaricare tutto
       setReviews((prev) => [savedReview, ...prev]);
-
       setComment("");
       setRating(0);
       setSubmitStatus("Commento pubblicato!");
@@ -62,14 +58,16 @@ export default function CommentSection({ productId, session }) {
 
   return (
     <div className="mt-10">
-      <h2 className="text-2xl font-semibold mb-3">Comments</h2>
+      <h2 className="text-2xl font-semibold mb-4">Comments</h2>
 
       {loading ? (
         <p>Loading comments...</p>
       ) : reviews.length === 0 ? (
-        <p>No comments yet. Be the first to comment!</p>
+        <p className="text-gray-500">
+          No comments yet. Be the first to comment!
+        </p>
       ) : (
-        <ul className="space-y-4">
+        <ul className="space-y-4 mb-6">
           {reviews.map((review) => (
             <li key={review._id} className="border-b pb-3">
               <strong>{review.user?.name || "Anonymous"}</strong>
@@ -90,8 +88,7 @@ export default function CommentSection({ productId, session }) {
         </ul>
       )}
 
-      {/* FORM COMMENTI */}
-      <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+      <form onSubmit={handleSubmit} className="mt-4 space-y-4">
         <textarea
           className="w-full border p-3 rounded resize-none"
           rows="3"
@@ -123,7 +120,9 @@ export default function CommentSection({ productId, session }) {
 
         {submitStatus && <p className="text-sm mt-2">{submitStatus}</p>}
         {!session && (
-          <p className="text-red-500">You must be logged in to comment.</p>
+          <p className="text-red-500 text-sm">
+            You must be logged in to comment.
+          </p>
         )}
       </form>
     </div>
