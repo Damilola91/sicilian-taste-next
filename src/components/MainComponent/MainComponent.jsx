@@ -1,49 +1,38 @@
-// components/Main/MainComponent.jsx
-import { searchProductsByNameAction } from "@/actions/product";
-import PopularCategories from "../PopularCategories/PopularCategories";
-import SuperDelicious from "../SuperDelicious/SuperDelicious";
-import Newsletter from "../Pages/Newsletter/Newsletter";
 import ProductCard from "../ProductCard/ProductCard";
+import PopularCategories from "../PopularCategories/PopularCategories";
+import SuperDelicious from "../SuperDelicoius/SuperDelicous";
+import Newsletter from "../Newsletter/Newsletter";
 
-export default async function MainComponent({ search }) {
-  let results = [];
-  let searchError = null;
-
-  if (search) {
-    try {
-      const data = await searchProductsByNameAction(search);
-      results = data.products || [];
-    } catch (err) {
-      searchError = err.message;
-    }
-  }
+export default function MainComponent({
+  products,
+  searchResults,
+  searchQuery,
+}) {
+  const isSearching = searchQuery && searchQuery.length > 0;
 
   return (
-    <main className="max-w-6xl mx-auto my-10 px-4">
-      {/* 🔍 Search Results */}
-      {search && (
-        <div className="mb-10">
-          <h2 className="text-2xl font-bold mb-4">
-            Search results for "{search}"
-          </h2>
+    <main className="container my-5">
+      {isSearching ? (
+        <>
+          <h2>Risultati per: "{searchQuery}"</h2>
 
-          {results.length > 0 ? (
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-              {results.map((product) => (
+          {searchResults.length === 0 ? (
+            <p>Nessun prodotto trovato.</p>
+          ) : (
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {searchResults.map((product) => (
                 <ProductCard key={product._id} product={product} />
               ))}
             </div>
-          ) : (
-            <p className="text-gray-500">
-              {searchError || "No products found"}
-            </p>
           )}
-        </div>
+        </>
+      ) : (
+        <>
+          <PopularCategories />
+          <SuperDelicious />
+          <Newsletter />
+        </>
       )}
-
-      <PopularCategories />
-      <SuperDelicious />
-      <Newsletter />
     </main>
   );
 }

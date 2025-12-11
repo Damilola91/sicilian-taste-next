@@ -4,7 +4,7 @@ import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
 import { loginUserAction, logoutUserAction } from "@/actions/auth";
-import { FcGoogle } from "react-icons/fc";
+import { Chrome } from "lucide-react";
 
 export default function Login({ closeDrawer, session }) {
   const router = useRouter();
@@ -135,7 +135,7 @@ export default function Login({ closeDrawer, session }) {
         onClick={redirectToGoogle}
         className="w-full border rounded py-2 flex items-center justify-center gap-2 hover:bg-gray-100 transition"
       >
-        <FcGoogle size={24} /> Login con Google
+        <Chrome size={24} /> Login con Google
       </button>
     </div>
   );

@@ -1,24 +1,32 @@
 "use client";
 
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
-import { useDispatch } from "react-redux";
-import { searchProductsByName } from "@/reducer/productSlice";
-import "./SearchInput.css";
 
-const SearchInput = () => {
-  const dispatch = useDispatch();
-  const [searchQuery, setSearchQuery] = useState("");
+export default function SearchInput() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
-  const handleSearchChange = (event) => setSearchQuery(event.target.value);
+  const [searchQuery, setSearchQuery] = useState(
+    searchParams.get("search") || ""
+  );
 
-  const handleSearchSubmit = (event) => {
-    event.preventDefault();
-    dispatch(searchProductsByName(searchQuery.trim() || ""));
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+
+    const query = searchQuery.trim();
+
+    if (!query) {
+      router.push("/"); // rimuove la ricerca
+      return;
+    }
+
+    router.push(`/?search=${encodeURIComponent(query)}`);
   };
 
   const handleClearSearch = () => {
     setSearchQuery("");
-    dispatch(searchProductsByName(""));
+    router.push("/");
   };
 
   return (
@@ -27,9 +35,9 @@ const SearchInput = () => {
         <input
           type="text"
           value={searchQuery}
-          onChange={handleSearchChange}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          placeholder="Search product..."
           className="search-input"
-          placeholder="Search Product"
         />
 
         <button
@@ -37,11 +45,9 @@ const SearchInput = () => {
           onClick={handleClearSearch}
           className="clear-button"
         >
-          &#x2715;
+          ✕
         </button>
       </form>
     </div>
   );
-};
-
-export default SearchInput;
+}

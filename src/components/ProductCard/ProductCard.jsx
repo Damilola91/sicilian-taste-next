@@ -8,14 +8,12 @@ import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
 
 import { addReviewAction, getReviewsByProductAction } from "@/actions/reviews";
-import useSession from "../../hooks/useSession";
-
-import "./ProductCard.css";
+import { getSession } from "@/lib/session";
 
 const ProductCard = ({ product }) => {
   const dispatch = useDispatch();
   const router = useRouter();
-  const session = useSession();
+  const session = getSession();
 
   const [reviews, setReviews] = useState([]);
   const [userRating, setUserRating] = useState(0);

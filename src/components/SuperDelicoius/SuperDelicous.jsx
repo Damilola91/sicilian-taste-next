@@ -1,5 +1,5 @@
-import { getPaginatedProductsAction } from "@/actions/products";
-import SuperDeliciousClient from "./SuperDeliciousClient";
+import { getPaginatedProductsAction } from "@/actions/product";
+import SuperDeliciousClient from "../SuperDeliciousClient/SuperDelicoiusClient";
 
 const SuperDelicious = async () => {
   const data = await getPaginatedProductsAction({ page: 1, pageSize: 8 });

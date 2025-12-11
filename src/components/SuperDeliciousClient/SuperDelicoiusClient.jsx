@@ -1,7 +1,7 @@
 "use client";
 
 import { useDispatch } from "react-redux";
-import { addToCart } from "@/redux/cartSlice";
+import { addToCart } from "@/reducer/cartSlice";
 import { useRouter } from "next/navigation";
 import { Star } from "lucide-react";
 import { useState } from "react";

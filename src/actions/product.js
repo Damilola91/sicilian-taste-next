@@ -10,11 +10,22 @@ if (!API) {
 export const getAllProductsAction = async () => {
   const res = await fetch(`${API}/products`, { cache: "no-store" });
 
-  if (!res.ok) {
-    throw new Error("Errore nel recupero dei prodotti");
-  }
+  if (!res.ok) throw new Error("Errore nel recupero dei prodotti");
 
-  return res.json(); // { products: [...] } o quello che restituisce il tuo backend
+  const data = await res.json();
+
+  const normalizeProduct = (p) => ({
+    ...p,
+    price: parseFloat(p.price?.$numberDecimal || p.price),
+    availableInStock: parseFloat(
+      p.availableInStock?.$numberDecimal || p.availableInStock
+    ),
+  });
+
+  return {
+    ...data,
+    products: data.products?.map(normalizeProduct) || [],
+  };
 };
 
 // 🟢 2) Prodotti paginati (per SuperDelicious, ProductList admin…)
@@ -26,11 +37,22 @@ export const getPaginatedProductsAction = async ({
     cache: "no-store",
   });
 
-  if (!res.ok) {
-    throw new Error("Errore nel recupero dei prodotti paginati");
-  }
+  if (!res.ok) throw new Error("Errore nel recupero dei prodotti paginati");
 
-  return res.json(); // es: { products, totalPages, count, ... }
+  const data = await res.json();
+
+  const normalizeProduct = (p) => ({
+    ...p,
+    price: parseFloat(p.price?.$numberDecimal || p.price),
+    availableInStock: parseFloat(
+      p.availableInStock?.$numberDecimal || p.availableInStock
+    ),
+  });
+
+  return {
+    ...data,
+    products: data.products?.map(normalizeProduct) || [],
+  };
 };
 
 // 🟢 3) Prodotti per categoria (CategoryPage, PopularCategories…)
