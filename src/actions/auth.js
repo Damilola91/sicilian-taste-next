@@ -2,7 +2,7 @@
 
 import { cookies } from "next/headers";
 
-const API = process.env.API_BASE_URL; // NON esposta al client
+const API = process.env.API_BASE_URL; // ❗SERVER ONLY
 
 export const loginUserAction = async ({ email, password }) => {
   try {
@@ -18,9 +18,12 @@ export const loginUserAction = async ({ email, password }) => {
       return { error: data.message || "Credenziali non valide" };
     }
 
-    cookies().set("token", data.token, {
+    // ⬇⬇⬇ FIX: cookies() must be awaited!
+    const cookieStore = await cookies();
+
+    cookieStore.set("token", data.token, {
       httpOnly: true,
-      secure: true,
+      secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
       path: "/",
       maxAge: 60 * 60 * 24 * 7, // 7 giorni
@@ -34,6 +37,9 @@ export const loginUserAction = async ({ email, password }) => {
 };
 
 export async function logoutUserAction() {
-  cookies().delete("token");
+  const cookieStore = await cookies();
+
+  cookieStore.delete("token");
+
   return { success: true };
 }

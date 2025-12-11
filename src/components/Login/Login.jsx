@@ -156,7 +156,7 @@ export default function Login({ closeDrawer, session }) {
       <p className="text-center text-sm mt-4">
         Non hai un account?{" "}
         <a
-          href="/signup"
+          href="/register"
           className="text-orange-500 font-semibold hover:underline"
         >
           Registrati
