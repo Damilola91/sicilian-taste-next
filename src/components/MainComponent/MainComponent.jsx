@@ -17,7 +17,7 @@ const MainComponent = ({ searchResults, searchQuery }) => {
           {searchResults.length === 0 ? (
             <p className="text-gray-500">Nessun prodotto trovato.</p>
           ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
               {searchResults.map((product) => (
                 <ProductCard key={product._id} product={product} />
               ))}

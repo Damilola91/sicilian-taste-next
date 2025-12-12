@@ -5,6 +5,7 @@ import { addToCart } from "@/reducer/cartSlice";
 import { useRouter } from "next/navigation";
 import { Star } from "lucide-react";
 import { useState } from "react";
+import ProductCard from "../ProductCard/ProductCard";
 
 const SuperDeliciousClient = ({ products }) => {
   const dispatch = useDispatch();

@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 import dynamic from "next/dynamic";
-
-import { Search, Menu } from "lucide-react";
+import { Search, Menu, ShoppingCart } from "lucide-react";
 import Link from "next/link";
+
 import Login from "../Login/Login";
 import SearchInput from "../SearchInput/SearchInput";
 
@@ -55,8 +55,9 @@ const Navbar = ({ session }) => {
             <Link
               href="/buy"
               className="text-white text-lg font-serif hover:text-gray-200 transition"
+              aria-label="Cart"
             >
-              Buy
+              <ShoppingCart size={24} />
             </Link>
 
             {role === "admin" && (
@@ -68,15 +69,16 @@ const Navbar = ({ session }) => {
               </Link>
             )}
 
-            {/* Search */}
+            {/* SEARCH DESKTOP */}
             <button
               onClick={() => setShowSearchInput((prev) => !prev)}
               className="text-white hover:text-gray-200 transition"
+              aria-label="Search"
             >
               <Search size={24} />
             </button>
 
-            {/* Login / Logout button */}
+            {/* LOGIN / LOGOUT */}
             <button
               onClick={() => setIsDrawerOpen(true)}
               className="px-4 py-2 bg-white text-[#ff6347] rounded-md font-medium hover:bg-gray-100 transition"
@@ -85,13 +87,35 @@ const Navbar = ({ session }) => {
             </button>
           </div>
 
-          {/* MOBILE MENU BUTTON */}
-          <button
-            onClick={() => setIsMenuOpen((prev) => !prev)}
-            className="md:hidden text-white p-2"
-          >
-            <Menu size={28} />
-          </button>
+          {/* MOBILE ICONS (SEARCH + CART + MENU) */}
+          <div className="md:hidden flex items-center gap-3">
+            {/* SEARCH MOBILE */}
+            <button
+              onClick={() => setShowSearchInput((prev) => !prev)}
+              className="text-white p-2 hover:text-gray-200 transition"
+              aria-label="Search"
+            >
+              <Search size={24} />
+            </button>
+
+            {/* CART MOBILE */}
+            <Link
+              href="/buy"
+              className="text-white p-2 hover:text-gray-200 transition"
+              aria-label="Cart"
+            >
+              <ShoppingCart size={26} />
+            </Link>
+
+            {/* MENU MOBILE */}
+            <button
+              onClick={() => setIsMenuOpen((prev) => !prev)}
+              className="text-white p-2"
+              aria-label="Menu"
+            >
+              <Menu size={28} />
+            </button>
+          </div>
         </div>
 
         {/* MOBILE MENU */}
@@ -111,13 +135,6 @@ const Navbar = ({ session }) => {
               Category
             </Link>
 
-            <Link
-              href="/buy"
-              className="text-white text-xl font-serif hover:text-gray-200 transition"
-            >
-              Buy
-            </Link>
-
             {role === "admin" && (
               <Link
                 href="/admin"
@@ -127,7 +144,7 @@ const Navbar = ({ session }) => {
               </Link>
             )}
 
-            {/* Search mobile */}
+            {/* SEARCH MOBILE (MENU) */}
             <button
               onClick={() => setShowSearchInput((prev) => !prev)}
               className="flex justify-center items-center gap-2 text-white hover:text-gray-200 transition"
@@ -135,7 +152,7 @@ const Navbar = ({ session }) => {
               <Search size={22} /> Search
             </button>
 
-            {/* Login mobile */}
+            {/* LOGIN MOBILE */}
             <button
               onClick={() => setIsDrawerOpen(true)}
               className="w-full px-4 py-2 bg-white text-[#ff6347] rounded-md font-medium hover:bg-gray-100 transition"
@@ -149,7 +166,7 @@ const Navbar = ({ session }) => {
       {/* SEARCH INPUT */}
       {showSearchInput && <SearchInput />}
 
-      {/* SIDE DRAWER LOGIN */}
+      {/* LOGIN DRAWER */}
       <Drawer
         open={isDrawerOpen}
         onClose={() => setIsDrawerOpen(false)}
