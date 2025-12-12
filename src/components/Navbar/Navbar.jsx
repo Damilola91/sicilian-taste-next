@@ -1,12 +1,18 @@
 "use client";
 
 import { useState } from "react";
-import Drawer from "react-modern-drawer";
-import "react-modern-drawer/dist/index.css";
+import dynamic from "next/dynamic";
+
 import { Search, Menu } from "lucide-react";
 import Link from "next/link";
 import Login from "../Login/Login";
 import SearchInput from "../SearchInput/SearchInput";
+
+const Drawer = dynamic(() => import("react-modern-drawer"), {
+  ssr: false,
+});
+
+import "react-modern-drawer/dist/index.css";
 
 const Navbar = ({ session }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
