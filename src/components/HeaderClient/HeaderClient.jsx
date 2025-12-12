@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-export default function HeaderClient({ products }) {
+const HeaderClient = ({ products }) => {
   const [index, setIndex] = useState(0);
 
   const prev = () => setIndex((i) => (i === 0 ? products.length - 1 : i - 1));
@@ -90,4 +90,6 @@ export default function HeaderClient({ products }) {
       </div>
     </header>
   );
-}
+};
+
+export default HeaderClient;

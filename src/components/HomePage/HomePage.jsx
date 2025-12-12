@@ -4,12 +4,7 @@ import MainComponent from "@/components/MainComponent/MainComponent";
 import Footer from "@/components/Footer/Footer";
 import Disclaimer from "@/components/Disclaimer/Disclaimer";
 
-export default function HomePage({
-  session,
-  products,
-  searchResults,
-  searchQuery,
-}) {
+const HomePage = ({ session, products, searchResults, searchQuery }) => {
   return (
     <>
       <Navbar session={session} />
@@ -23,4 +18,6 @@ export default function HomePage({
       <Footer />
     </>
   );
-}
+};
+
+export default HomePage;

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { addReviewAction, getReviewsByProductAction } from "@/actions/reviews";
 import { Star } from "lucide-react";
 
-export default function CommentSection({ productId, session }) {
+const CommentSection = ({ productId, session }) => {
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -127,4 +127,6 @@ export default function CommentSection({ productId, session }) {
       </form>
     </div>
   );
-}
+};
+
+export default CommentSection;

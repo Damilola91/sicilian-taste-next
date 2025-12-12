@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { Star } from "lucide-react";
 import { useState } from "react";
 
-export default function SuperDeliciousClient({ products }) {
+const SuperDeliciousClient = ({ products }) => {
   const dispatch = useDispatch();
   const router = useRouter();
 
@@ -117,4 +117,6 @@ export default function SuperDeliciousClient({ products }) {
       </div>
     </section>
   );
-}
+};
+
+export default SuperDeliciousClient;

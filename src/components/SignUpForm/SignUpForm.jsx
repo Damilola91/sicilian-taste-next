@@ -4,7 +4,7 @@ import { useState } from "react";
 import { User, Mail, Lock, ChevronDown } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-export default function SignUpForm() {
+const SignUpForm = () => {
   const router = useRouter();
 
   const [formData, setFormData] = useState({
@@ -168,4 +168,6 @@ export default function SignUpForm() {
       </div>
     </div>
   );
-}
+};
+
+export default SignUpForm;

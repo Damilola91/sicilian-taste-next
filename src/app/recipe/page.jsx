@@ -2,7 +2,7 @@ import { getAllProductsAction } from "@/actions/product";
 import { getSession } from "@/lib/session";
 import RecipePage from "@/components/RecipePage/RecipePage";
 
-export default async function RandomRecipePage() {
+const RandomRecipePage = async () => {
   const session = await getSession();
 
   // 🟠 1) recupero tutti i prodotti
@@ -28,4 +28,6 @@ export default async function RandomRecipePage() {
       error={null}
     />
   );
-}
+};
+
+export default RandomRecipePage;

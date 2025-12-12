@@ -3,11 +3,7 @@ import PopularCategories from "../PopularCategories/PopularCategories";
 import SuperDelicious from "../SuperDelicoius/SuperDelicous";
 import Newsletter from "../Newsletter/Newsletter";
 
-export default function MainComponent({
-  products,
-  searchResults,
-  searchQuery,
-}) {
+const MainComponent = ({ searchResults, searchQuery }) => {
   const isSearching = searchQuery && searchQuery.length > 0;
 
   return (
@@ -35,4 +31,6 @@ export default function MainComponent({
       )}
     </main>
   );
-}
+};
+
+export default MainComponent;

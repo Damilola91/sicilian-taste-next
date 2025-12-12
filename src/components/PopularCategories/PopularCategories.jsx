@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { getAllProductsAction } from "@/actions/product";
 
-export default async function PopularCategories() {
+const PopularCategories = async () => {
   const data = await getAllProductsAction();
   const products = data.products || [];
 
@@ -49,4 +49,6 @@ export default async function PopularCategories() {
       </div>
     </section>
   );
-}
+};
+
+export default PopularCategories;
