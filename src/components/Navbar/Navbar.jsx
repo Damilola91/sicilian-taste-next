@@ -8,7 +8,7 @@ import Link from "next/link";
 import Login from "../Login/Login";
 import SearchInput from "../SearchInput/SearchInput";
 
-export default function Navbar({ session }) {
+const Navbar = ({ session }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [showSearchInput, setShowSearchInput] = useState(false);
@@ -155,4 +155,6 @@ export default function Navbar({ session }) {
       </Drawer>
     </>
   );
-}
+};
+
+export default Navbar;

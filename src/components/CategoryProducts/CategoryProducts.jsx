@@ -6,13 +6,13 @@ import { useRouter } from "next/navigation";
 import ResponsivePagination from "react-responsive-pagination";
 import { getProductsByCategoryAction } from "@/actions/product";
 
-export default function CategoryProducts({
+const CategoryProducts = ({
   category,
   initialProducts,
   initialPage,
   totalPages,
   totalProducts,
-}) {
+}) => {
   const router = useRouter();
 
   const [products, setProducts] = useState(initialProducts || []);
@@ -104,4 +104,6 @@ export default function CategoryProducts({
       )}
     </section>
   );
-}
+};
+
+export default CategoryProducts;

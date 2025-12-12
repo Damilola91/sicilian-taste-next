@@ -6,7 +6,7 @@ import Swal from "sweetalert2";
 import { loginUserAction, logoutUserAction } from "@/actions/auth";
 import { Chrome } from "lucide-react";
 
-export default function Login({ closeDrawer, session }) {
+const Login = ({ closeDrawer, session }) => {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
@@ -164,4 +164,6 @@ export default function Login({ closeDrawer, session }) {
       </p>
     </div>
   );
-}
+};
+
+export default Login;

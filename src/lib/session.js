@@ -5,7 +5,7 @@ import jwt from "jsonwebtoken";
 
 const SECRET = process.env.JWT_SECRET;
 
-export async function getSession() {
+export const getSession = async () => {
   const cookieStore = await cookies();
   const token = cookieStore.get("token")?.value;
 
@@ -25,4 +25,4 @@ export async function getSession() {
   } catch (err) {
     return null;
   }
-}
+};

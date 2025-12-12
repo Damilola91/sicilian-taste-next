@@ -5,7 +5,7 @@ import Disclaimer from "@/components/Disclaimer/Disclaimer";
 import { getProductsByCategoryAction } from "@/actions/product";
 import { getSession } from "@/lib/session";
 
-export default async function CategoryPage(props) {
+const CategoryPage = async (props) => {
   const { category } = await props.params; // ⬅️ Sbloccata la Promise
   const session = await getSession();
 
@@ -33,4 +33,6 @@ export default async function CategoryPage(props) {
       <Footer />
     </>
   );
-}
+};
+
+export default CategoryPage;

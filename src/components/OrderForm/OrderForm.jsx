@@ -14,7 +14,7 @@ import { useRouter } from "next/navigation";
 
 import { createOrderAction } from "@/actions/order";
 
-export default function OrderForm({ cartItems, totalAmount, session }) {
+const OrderForm = ({ cartItems, totalAmount, session }) => {
   const dispatch = useDispatch();
   const stripe = useStripe();
   const elements = useElements();
@@ -219,4 +219,6 @@ export default function OrderForm({ cartItems, totalAmount, session }) {
       )}
     </div>
   );
-}
+};
+
+export default OrderForm;

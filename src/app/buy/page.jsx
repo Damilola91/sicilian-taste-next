@@ -4,7 +4,7 @@ import Disclaimer from "@/components/Disclaimer/Disclaimer";
 import WrappedOrderForm from "@/components/WrappedOrderForm/WrappedOrderForm";
 import { getSession } from "@/lib/session";
 
-export default async function BuyPage() {
+const BuyPage = async () => {
   const session = await getSession();
 
   return (
@@ -19,4 +19,6 @@ export default async function BuyPage() {
       <Footer />
     </>
   );
-}
+};
+
+export default BuyPage;

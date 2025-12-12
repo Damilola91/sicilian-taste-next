@@ -5,8 +5,7 @@ import {
 import { getSession } from "@/lib/session";
 import HomePage from "@/components/HomePage/HomePage";
 
-export default async function Page({ searchParams }) {
-  // ⬅️ FIX: searchParams è una Promise
+const Page = async ({ searchParams }) => {
   const params = await searchParams;
   const searchQuery = params?.search || "";
 
@@ -30,4 +29,6 @@ export default async function Page({ searchParams }) {
       searchQuery={searchQuery}
     />
   );
-}
+};
+
+export default Page;

@@ -1,8 +1,10 @@
 import { getSession } from "@/lib/session";
 import CategoryPage from "@/components/CategoryPage/CategoryPage";
 
-export default async function CategoriesRoute() {
+const CategoriesRoute = async () => {
   const session = await getSession();
 
   return <CategoryPage session={session} />;
-}
+};
+
+export default CategoriesRoute;

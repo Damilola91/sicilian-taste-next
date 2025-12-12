@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { getAllProductsAction } from "@/actions/product";
 
-export default async function Categories() {
+const Categories = async () => {
   const data = await getAllProductsAction();
   const products = Array.isArray(data?.products) ? data.products : data || [];
 
@@ -50,4 +50,6 @@ export default async function Categories() {
       </div>
     </section>
   );
-}
+};
+
+export default Categories;
