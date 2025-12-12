@@ -7,15 +7,17 @@ const MainComponent = ({ searchResults, searchQuery }) => {
   const isSearching = searchQuery && searchQuery.length > 0;
 
   return (
-    <main className="container my-5">
+    <main className="w-full max-w-7xl mx-auto px-4 my-10">
       {isSearching ? (
         <>
-          <h2>Risultati per: "{searchQuery}"</h2>
+          <h2 className="text-2xl font-semibold mb-6">
+            Risultati per: "{searchQuery}"
+          </h2>
 
           {searchResults.length === 0 ? (
-            <p>Nessun prodotto trovato.</p>
+            <p className="text-gray-500">Nessun prodotto trovato.</p>
           ) : (
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
               {searchResults.map((product) => (
                 <ProductCard key={product._id} product={product} />
               ))}
