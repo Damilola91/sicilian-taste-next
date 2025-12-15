@@ -1,14 +1,31 @@
 "use server";
 
-import { cookies } from "next/headers";
-
 const API = process.env.API_BASE_URL;
 
 if (!API) {
-  console.warn("⚠️ API_BASE_URL non è definita nelle env.");
+  throw new Error("❌ API_BASE_URL non definita nelle env");
 }
 
-// 🟢 1) Tutti i prodotti (senza paginazione)
+/* --------------------------------
+   HELPERS
+-------------------------------- */
+
+const normalizeProduct = (p) => ({
+  ...p,
+  price:
+    typeof p.price === "object"
+      ? parseFloat(p.price?.$numberDecimal)
+      : Number(p.price),
+  availableInStock:
+    typeof p.availableInStock === "object"
+      ? parseFloat(p.availableInStock?.$numberDecimal)
+      : Number(p.availableInStock ?? 0),
+});
+
+/* --------------------------------
+   1️⃣ TUTTI I PRODOTTI
+-------------------------------- */
+
 export const getAllProductsAction = async () => {
   const res = await fetch(`${API}/products`, { cache: "no-store" });
 
@@ -16,21 +33,16 @@ export const getAllProductsAction = async () => {
 
   const data = await res.json();
 
-  const normalizeProduct = (p) => ({
-    ...p,
-    price: parseFloat(p.price?.$numberDecimal || p.price),
-    availableInStock: parseFloat(
-      p.availableInStock?.$numberDecimal || p.availableInStock
-    ),
-  });
-
   return {
     ...data,
     products: data.products?.map(normalizeProduct) || [],
   };
 };
 
-// 🟢 2) Prodotti paginati (per SuperDelicious, ProductList admin…)
+/* --------------------------------
+   2️⃣ PRODOTTI PAGINATI
+-------------------------------- */
+
 export const getPaginatedProductsAction = async ({
   page = 1,
   pageSize = 8,
@@ -39,17 +51,9 @@ export const getPaginatedProductsAction = async ({
     cache: "no-store",
   });
 
-  if (!res.ok) throw new Error("Errore nel recupero dei prodotti paginati");
+  if (!res.ok) throw new Error("Errore nel recupero prodotti paginati");
 
   const data = await res.json();
-
-  const normalizeProduct = (p) => ({
-    ...p,
-    price: parseFloat(p.price?.$numberDecimal || p.price),
-    availableInStock: parseFloat(
-      p.availableInStock?.$numberDecimal || p.availableInStock
-    ),
-  });
 
   return {
     ...data,
@@ -57,15 +61,16 @@ export const getPaginatedProductsAction = async ({
   };
 };
 
-// 🟢 3) Prodotti per categoria (CategoryPage, PopularCategories…)
+/* --------------------------------
+   3️⃣ PRODOTTI PER CATEGORIA
+-------------------------------- */
+
 export const getProductsByCategoryAction = async ({
   category,
   page = 1,
   pageSize = 6,
 }) => {
-  if (!category) {
-    throw new Error("Categoria mancante");
-  }
+  if (!category) throw new Error("Categoria mancante");
 
   const res = await fetch(
     `${API}/products/search/${encodeURIComponent(
@@ -75,60 +80,58 @@ export const getProductsByCategoryAction = async ({
   );
 
   if (!res.ok) {
-    const errorText = await res.text();
-    console.error("Errore backend:", errorText);
-    throw new Error("Errore nel recupero dei prodotti della categoria");
+    const err = await res.text();
+    console.error(err);
+    throw new Error("Errore prodotti categoria");
   }
 
   return res.json();
 };
 
-// 🟢 4) Singolo prodotto per id (RecipePage SSR)
+/* --------------------------------
+   4️⃣ PRODOTTO PER ID
+-------------------------------- */
+
 export const getProductByIdAction = async (id) => {
-  if (!id) {
-    throw new Error("ID prodotto mancante");
-  }
+  if (!id) throw new Error("ID prodotto mancante");
 
   const res = await fetch(`${API}/products/${id}`, { cache: "no-store" });
 
-  if (!res.ok) {
-    throw new Error("Errore nel recupero del prodotto");
-  }
+  if (!res.ok) throw new Error("Errore prodotto");
 
-  return res.json(); // es: { product: {...} } oppure direttamente il prodotto
+  return res.json();
 };
 
-// 🟢 5) Search per titolo (SearchInput / Main)
+/* --------------------------------
+   5️⃣ SEARCH PER NOME
+-------------------------------- */
+
 export const searchProductsByNameAction = async (name) => {
   const query = name?.trim();
-
-  if (!query) {
-    // per evitare chiamate inutili
-    return { products: [] };
-  }
+  if (!query) return { products: [] };
 
   const res = await fetch(
     `${API}/products/title/${encodeURIComponent(query)}`,
     { cache: "no-store" }
   );
 
-  if (!res.ok) {
-    throw new Error("Errore nella ricerca dei prodotti per nome");
-  }
+  if (!res.ok) throw new Error("Errore ricerca");
 
-  return res.json(); // es: { products: [...] }
+  return res.json();
 };
 
-// 🟢 6) Update prodotto (admin)
+/* --------------------------------
+   7️⃣ UPDATE PRODOTTO
+-------------------------------- */
+
 export const updateProductAction = async ({ productId, updateData }) => {
-  if (!productId) {
-    throw new Error("productId mancante per l'update");
-  }
+  if (!productId) throw new Error("productId mancante");
 
   const res = await fetch(`${API}/products/update/${productId}`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
+      ...getAuthHeaders(),
     },
     body: JSON.stringify(updateData),
   });
@@ -136,68 +139,31 @@ export const updateProductAction = async ({ productId, updateData }) => {
   const data = await res.json().catch(() => ({}));
 
   if (!res.ok) {
-    throw new Error(data.message || "Errore nell'aggiornamento del prodotto");
-  }
-
-  return data.product || data; // dipende da cosa ritorna il backend
-};
-
-// 🟢 7) Delete prodotto (admin)
-export const deleteProductAction = async (productId) => {
-  if (!productId) {
-    throw new Error("productId mancante per la delete");
-  }
-
-  const res = await fetch(`${API}/products/delete/${productId}`, {
-    method: "DELETE",
-  });
-
-  const data = await res.json().catch(() => ({}));
-
-  if (!res.ok) {
-    throw new Error(data.message || "Errore nell'eliminazione del prodotto");
+    throw new Error(data.message || "Errore update prodotto");
   }
 
   return data.product || data;
 };
 
-export const uploadProductImageAction = async (file) => {
-  const formData = new FormData();
-  formData.append("file", file);
+/* --------------------------------
+   8️⃣ DELETE PRODOTTO
+-------------------------------- */
 
-  const res = await fetch(`${API}/products/upload/cloud`, {
-    method: "POST",
-    body: formData,
-  });
+export const deleteProductAction = async (productId) => {
+  if (!productId) throw new Error("productId mancante");
 
-  if (!res.ok) {
-    throw new Error("Errore durante upload immagine");
-  }
-
-  const data = await res.json();
-  return data.file.url;
-};
-
-export const createProductAction = async (productData) => {
-  const token = cookies().get("token")?.value;
-
-  if (!token) {
-    throw new Error("Non autenticato");
-  }
-
-  const res = await fetch(`${API}/products/create`, {
-    method: "POST",
+  const res = await fetch(`${API}/products/delete/${productId}`, {
+    method: "DELETE",
     headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
+      ...getAuthHeaders(),
     },
-    body: JSON.stringify(productData),
   });
 
+  const data = await res.json().catch(() => ({}));
+
   if (!res.ok) {
-    throw new Error("Errore creazione prodotto");
+    throw new Error(data.message || "Errore delete prodotto");
   }
 
-  const data = await res.json();
-  return data.product;
+  return data.product || data;
 };
