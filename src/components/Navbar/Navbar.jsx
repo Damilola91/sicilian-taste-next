@@ -63,14 +63,6 @@ const Navbar = ({ session }) => {
               </Link>
             )}
 
-            <Link
-              href="/buy"
-              className="text-white text-lg font-serif hover:text-gray-200 transition"
-              aria-label="Cart"
-            >
-              <ShoppingCart size={24} />
-            </Link>
-
             {role === "admin" && (
               <Link
                 href="/admin"
@@ -79,6 +71,14 @@ const Navbar = ({ session }) => {
                 Admin
               </Link>
             )}
+
+            <Link
+              href="/buy"
+              className="text-white text-lg font-serif hover:text-gray-200 transition"
+              aria-label="Cart"
+            >
+              <ShoppingCart size={24} />
+            </Link>
 
             {/* SEARCH DESKTOP */}
             <button
