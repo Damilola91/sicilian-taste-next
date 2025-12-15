@@ -5,9 +5,6 @@ const API = process.env.API_BASE_URL;
 
 export async function POST(req) {
   try {
-    /* ---------------------------
-       1️⃣ PRENDI TOKEN (FIX)
-    ----------------------------*/
     const cookieStore = await cookies();
     const token = cookieStore.get("token")?.value;
 
@@ -15,14 +12,8 @@ export async function POST(req) {
       return NextResponse.json({ message: "Non autenticato" }, { status: 401 });
     }
 
-    /* ---------------------------
-       2️⃣ BODY
-    ----------------------------*/
     const body = await req.json();
 
-    /* ---------------------------
-       3️⃣ CALL BACKEND
-    ----------------------------*/
     const res = await fetch(`${API}/products/create`, {
       method: "POST",
       headers: {

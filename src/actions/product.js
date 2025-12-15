@@ -1,5 +1,7 @@
 "use server";
 
+import { cookies } from "next/headers";
+
 const API = process.env.API_BASE_URL;
 
 if (!API) {
@@ -21,6 +23,19 @@ const normalizeProduct = (p) => ({
       ? parseFloat(p.availableInStock?.$numberDecimal)
       : Number(p.availableInStock ?? 0),
 });
+
+const getAuthHeaders = async () => {
+  const cookieStore = await cookies(); // ✅ obbligatorio in Next 16
+  const token = cookieStore.get("token")?.value;
+
+  if (!token) {
+    throw new Error("Non autenticato");
+  }
+
+  return {
+    Authorization: `Bearer ${token}`,
+  };
+};
 
 /* --------------------------------
    1️⃣ TUTTI I PRODOTTI
@@ -121,6 +136,29 @@ export const searchProductsByNameAction = async (name) => {
 };
 
 /* --------------------------------
+   6️⃣ CREA PRODOTTO (company/admin)
+-------------------------------- */
+
+export const createProductAction = async (productData) => {
+  const res = await fetch(`${API}/products/create`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      ...(await getAuthHeaders()),
+    },
+    body: JSON.stringify(productData),
+  });
+
+  const data = await res.json().catch(() => ({}));
+
+  if (!res.ok) {
+    throw new Error(data.message || "Errore creazione prodotto");
+  }
+
+  return normalizeProduct(data.product);
+};
+
+/* --------------------------------
    7️⃣ UPDATE PRODOTTO
 -------------------------------- */
 
@@ -131,7 +169,7 @@ export const updateProductAction = async ({ productId, updateData }) => {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
-      ...getAuthHeaders(),
+      ...(await getAuthHeaders()),
     },
     body: JSON.stringify(updateData),
   });
@@ -142,7 +180,7 @@ export const updateProductAction = async ({ productId, updateData }) => {
     throw new Error(data.message || "Errore update prodotto");
   }
 
-  return data.product || data;
+  return normalizeProduct(data.product || data);
 };
 
 /* --------------------------------
@@ -155,7 +193,7 @@ export const deleteProductAction = async (productId) => {
   const res = await fetch(`${API}/products/delete/${productId}`, {
     method: "DELETE",
     headers: {
-      ...getAuthHeaders(),
+      ...(await getAuthHeaders()),
     },
   });
 
@@ -165,5 +203,31 @@ export const deleteProductAction = async (productId) => {
     throw new Error(data.message || "Errore delete prodotto");
   }
 
-  return data.product || data;
+  return normalizeProduct(data.product || data);
+};
+
+/* --------------------------------
+   9️⃣ PRODOTTI DELL’UTENTE LOGGATO
+-------------------------------- */
+
+export const getMyProductsAction = async () => {
+  const res = await fetch(`${API}/products/my`, {
+    cache: "no-store",
+    headers: {
+      ...(await getAuthHeaders()),
+    },
+  });
+
+  if (!res.ok) {
+    const err = await res.text();
+    console.error("Errore backend:", err);
+    throw new Error("Errore nel recupero dei tuoi prodotti");
+  }
+
+  const data = await res.json();
+
+  return {
+    ...data,
+    products: data.products?.map(normalizeProduct) || [],
+  };
 };
