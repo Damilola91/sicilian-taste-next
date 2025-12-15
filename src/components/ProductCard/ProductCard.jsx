@@ -17,9 +17,6 @@ const ProductCard = ({ product, session }) => {
   const [reviews, setReviews] = useState([]);
   const [userRating, setUserRating] = useState(0);
 
-  /* -----------------------------
-     LOAD REVIEWS
-  ------------------------------*/
   useEffect(() => {
     if (!product?._id) return;
 
@@ -33,9 +30,6 @@ const ProductCard = ({ product, session }) => {
     })();
   }, [product]);
 
-  /* -----------------------------
-     RATING CALC
-  ------------------------------*/
   const averageRating =
     reviews.length > 0
       ? reviews.reduce((s, r) => s + r.rating, 0) / reviews.length
@@ -43,15 +37,28 @@ const ProductCard = ({ product, session }) => {
 
   const displayedRating = userRating || averageRating;
 
-  /* -----------------------------
-     ADD TO CART
-  ------------------------------*/
+  const stock =
+    typeof product.availableInStock === "object"
+      ? parseFloat(product.availableInStock.$numberDecimal)
+      : product.availableInStock ?? product.stock ?? 0;
+
+  const rawPrice = product.price;
+
+  const price =
+    typeof rawPrice === "object" && rawPrice?.$numberDecimal
+      ? parseFloat(rawPrice.$numberDecimal)
+      : typeof rawPrice === "string"
+      ? parseFloat(rawPrice)
+      : typeof rawPrice === "number"
+      ? rawPrice
+      : 0;
+
   const handleAddToCart = () => {
     dispatch(
       addToCart({
         _id: product._id,
         name: product.name,
-        price: parseFloat(product.price.$numberDecimal),
+        price,
         img: product.img,
       })
     );
@@ -64,9 +71,6 @@ const ProductCard = ({ product, session }) => {
     });
   };
 
-  /* -----------------------------
-     RATE PRODUCT
-  ------------------------------*/
   const handleRating = async (ratingValue) => {
     if (!session?.id) {
       Swal.fire({
@@ -96,7 +100,6 @@ const ProductCard = ({ product, session }) => {
 
   return (
     <div className="bg-white border rounded-xl shadow-md hover:shadow-xl transition p-4 flex flex-col h-full">
-      {/* IMAGE – stile SuperDelicious */}
       <div
         className="relative w-full h-48 sm:h-52 md:h-56 rounded-lg overflow-hidden mb-3 cursor-pointer"
         onClick={() => router.push(`/recipe/${product._id}`)}
@@ -112,39 +115,36 @@ const ProductCard = ({ product, session }) => {
         />
       </div>
 
-      {/* TITLE */}
       <h3 className="font-semibold text-lg truncate">{product.name}</h3>
 
-      {/* DESCRIPTION */}
       <p className="text-sm text-gray-600 mt-1 line-clamp-2">
         {product.description}
       </p>
 
-      {/* PRICE */}
       <p className="mt-3 font-bold text-gray-800 text-lg">
-        €{parseFloat(product.price.$numberDecimal).toFixed(2)}
+        €{price.toFixed(2)}
       </p>
 
-      {/* RATING */}
       <div className="flex gap-1 my-3">
-        {[1, 2, 3, 4, 5].map((n) => (
-          <Star
-            key={n}
-            size={20}
-            className={`cursor-pointer transition ${
-              displayedRating >= n ? "text-yellow-400" : "text-gray-300"
-            }`}
-            onClick={() => handleRating(n)}
-          />
-        ))}
+        {[1, 2, 3, 4, 5].map((n) => {
+          const isActive = displayedRating >= n;
+
+          return (
+            <Star
+              key={n}
+              size={20}
+              onClick={() => handleRating(n)}
+              className={`cursor-pointer transition ${
+                isActive ? "text-yellow-400" : "text-gray-300"
+              }`}
+              fill={isActive ? "currentColor" : "none"}
+            />
+          );
+        })}
       </div>
 
-      {/* STOCK */}
-      <p className="text-green-700 text-sm font-medium">
-        Available: {parseFloat(product.availableInStock.$numberDecimal)}
-      </p>
+      <p className="text-green-700 text-sm font-medium">Available: {stock}</p>
 
-      {/* CTA */}
       <button
         onClick={handleAddToCart}
         className="mt-auto w-full bg-orange-500 hover:bg-orange-600 text-white py-2 rounded-lg font-medium transition shadow"

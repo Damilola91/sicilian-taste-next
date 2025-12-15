@@ -71,10 +71,6 @@ const Login = ({ closeDrawer, session }) => {
     window.location.href = `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/google`;
   };
 
-  // --------------------------------------------
-  // SE L’UTENTE È GIÀ LOGGATO
-  // --------------------------------------------
-
   if (session) {
     return (
       <div className="p-6 flex flex-col items-center text-center">
@@ -90,10 +86,6 @@ const Login = ({ closeDrawer, session }) => {
       </div>
     );
   }
-
-  // --------------------------------------------
-  // FORM DI LOGIN
-  // --------------------------------------------
 
   return (
     <div className="bg-white w-full max-w-sm mx-auto p-6 rounded-xl shadow-md">

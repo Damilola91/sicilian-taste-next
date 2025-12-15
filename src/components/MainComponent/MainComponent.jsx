@@ -3,7 +3,7 @@ import PopularCategories from "../PopularCategories/PopularCategories";
 import SuperDelicious from "../SuperDelicoius/SuperDelicous";
 import Newsletter from "../Newsletter/Newsletter";
 
-const MainComponent = ({ searchResults, searchQuery }) => {
+const MainComponent = ({ searchResults, searchQuery, session }) => {
   const isSearching = searchQuery && searchQuery.length > 0;
 
   return (
@@ -19,7 +19,11 @@ const MainComponent = ({ searchResults, searchQuery }) => {
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
               {searchResults.map((product) => (
-                <ProductCard key={product._id} product={product} />
+                <ProductCard
+                  key={product._id}
+                  product={product}
+                  session={session}
+                />
               ))}
             </div>
           )}

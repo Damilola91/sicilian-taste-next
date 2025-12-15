@@ -19,6 +19,7 @@ const CommentSection = ({ productId, session }) => {
       setReviews(data.reviews || []);
     } catch (e) {
       console.error("Errore nel caricamento recensioni", e);
+      setReviews([]);
     } finally {
       setLoading(false);
     }
@@ -32,24 +33,31 @@ const CommentSection = ({ productId, session }) => {
     e.preventDefault();
 
     const userId = session?.id;
-    if (!userId) return alert("Devi essere loggato per commentare!");
+    if (!userId) {
+      setSubmitStatus("Devi essere loggato per commentare.");
+      return;
+    }
 
     if (!comment.trim() || rating === 0) {
-      return setSubmitStatus("Inserisci commento + rating.");
+      setSubmitStatus("Inserisci commento e rating.");
+      return;
     }
 
     try {
-      const savedReview = await addReviewAction({
+      setSubmitStatus("Invio in corso...");
+
+      await addReviewAction({
         productId,
         comment,
         rating,
         userId,
       });
 
-      setReviews((prev) => [savedReview, ...prev]);
+      await loadReviews();
+
       setComment("");
       setRating(0);
-      setSubmitStatus("Commento pubblicato!");
+      setSubmitStatus("Commento pubblicato con successo!");
     } catch (err) {
       console.error(err);
       setSubmitStatus("Errore nell'invio del commento.");
@@ -70,27 +78,36 @@ const CommentSection = ({ productId, session }) => {
         <ul className="space-y-4 mb-6">
           {reviews.map((review) => (
             <li key={review._id} className="border-b pb-3">
-              <strong>{review.user?.name || "Anonymous"}</strong>
+              <strong className="block text-gray-800">
+                {review.user?.name || "Anonymous"}
+              </strong>
 
               <div className="flex items-center gap-1 mt-1">
                 {Array.from({ length: 5 }).map((_, index) => (
                   <Star
                     key={index}
                     size={20}
-                    color={index < review.rating ? "gold" : "lightgray"}
+                    className={
+                      index < review.rating
+                        ? "text-yellow-400 fill-yellow-400"
+                        : "text-gray-300"
+                    }
                   />
                 ))}
               </div>
 
-              <p className="mt-1 text-gray-700">{review.comment}</p>
+              {review.comment && (
+                <p className="mt-1 text-gray-700">{review.comment}</p>
+              )}
             </li>
           ))}
         </ul>
       )}
 
+      {/* FORM */}
       <form onSubmit={handleSubmit} className="mt-4 space-y-4">
         <textarea
-          className="w-full border p-3 rounded resize-none"
+          className="w-full border p-3 rounded resize-none focus:outline-none focus:ring-2 focus:ring-orange-400"
           rows="3"
           placeholder="Write your comment..."
           value={comment}
@@ -103,9 +120,12 @@ const CommentSection = ({ productId, session }) => {
             <Star
               key={index}
               size={26}
-              color={index < rating ? "gold" : "lightgray"}
+              className={`cursor-pointer transition ${
+                index < rating
+                  ? "text-yellow-400 fill-yellow-400"
+                  : "text-gray-300"
+              }`}
               onClick={() => setRating(index + 1)}
-              className="cursor-pointer"
             />
           ))}
         </div>
@@ -113,12 +133,15 @@ const CommentSection = ({ productId, session }) => {
         <button
           type="submit"
           disabled={!session}
-          className="bg-orange-500 px-4 py-2 rounded text-white disabled:opacity-50"
+          className="bg-orange-500 px-4 py-2 rounded text-white disabled:opacity-50 hover:bg-orange-600 transition"
         >
           Post Comment
         </button>
 
-        {submitStatus && <p className="text-sm mt-2">{submitStatus}</p>}
+        {submitStatus && (
+          <p className="text-sm mt-2 text-gray-600">{submitStatus}</p>
+        )}
+
         {!session && (
           <p className="text-red-500 text-sm">
             You must be logged in to comment.

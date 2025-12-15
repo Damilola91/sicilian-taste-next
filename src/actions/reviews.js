@@ -35,15 +35,29 @@ export const addReviewAction = async ({
 
 // 🟢 GET reviews by product
 export const getReviewsByProductAction = async (productId) => {
-  const res = await fetch(`${API}/reviews/product/${productId}`, {
-    cache: "no-store",
-  });
+  try {
+    const res = await fetch(`${API}/reviews/product/${productId}`, {
+      cache: "no-store",
+    });
 
-  if (!res.ok) {
-    throw new Error("Errore nel recupero delle recensioni per prodotto");
+    // ✅ se non ci sono recensioni → ritorna array vuoto
+    if (res.status === 404 || res.status === 204) {
+      return { reviews: [] };
+    }
+
+    if (!res.ok) {
+      throw new Error("Errore nel recupero delle recensioni");
+    }
+
+    const data = await res.json();
+
+    return {
+      reviews: Array.isArray(data.reviews) ? data.reviews : [],
+    };
+  } catch (error) {
+    console.error("getReviewsByProductAction:", error);
+    return { reviews: [] }; // ✅ MAI crashare la UI
   }
-
-  return res.json(); // { reviews: [...] }
 };
 
 // 🟢 DELETE review
