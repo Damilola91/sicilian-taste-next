@@ -23,7 +23,7 @@ const SuccessLoginGoogle = () => {
   }, [searchParams, router]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 to-white px-4">
+    <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-orange-50 to-white px-4">
       <div className="bg-white rounded-2xl shadow-xl p-10 max-w-md w-full text-center animate-fade-in">
         <div className="flex justify-center mb-4">
           <CheckCircle size={64} className="text-orange-500" />
