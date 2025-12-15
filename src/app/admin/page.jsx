@@ -1,14 +1,36 @@
-import { getSession } from "@/lib/session";
 import { redirect } from "next/navigation";
+import { getSession } from "@/lib/session";
+
+import CreateProductClient from "@/components/CreateProductClient/CreateProductClient";
+import AdminProductsList from "@/components/AdminProductList/AdminProductList";
+import SendNewsletter from "@/components/SendNewsletter/SendNewsletter";
 
 const AdminPage = async () => {
   const session = await getSession();
 
-  if (!session || !["admin"].includes(session.role)) {
-    return redirect("/");
+  if (!session || session.role !== "admin") {
+    redirect("/");
   }
 
-  return <h1>Admin Dashboard</h1>;
+  return (
+    <main className="max-w-7xl mx-auto px-4 py-14 space-y-20">
+      <h1
+        className="text-5xl text-center text-orange-500"
+        style={{ fontFamily: "'Brush Script MT', cursive" }}
+      >
+        Admin Dashboard
+      </h1>
+
+      {/* LISTA PRODOTTI */}
+      <AdminProductsList />
+
+      {/* CREATE PRODUCT (riuso Company) */}
+      <CreateProductClient />
+
+      {/* NEWSLETTER */}
+      <SendNewsletter />
+    </main>
+  );
 };
 
 export default AdminPage;
