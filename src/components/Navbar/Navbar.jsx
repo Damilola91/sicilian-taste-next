@@ -21,6 +21,7 @@ const Navbar = ({ session }) => {
 
   const isAuthenticated = !!session;
   const role = session?.role;
+  const canAccessCompany = role === "company" || role === "admin";
 
   return (
     <>
@@ -51,6 +52,16 @@ const Navbar = ({ session }) => {
             >
               Category
             </Link>
+
+            {/* ✅ LINK AZIENDE (solo company/admin) */}
+            {canAccessCompany && (
+              <Link
+                href="/company"
+                className="text-white text-lg font-serif hover:text-gray-200 transition"
+              >
+                Aziende
+              </Link>
+            )}
 
             <Link
               href="/buy"
@@ -134,6 +145,16 @@ const Navbar = ({ session }) => {
             >
               Category
             </Link>
+
+            {/* ✅ LINK AZIENDE (solo company/admin) */}
+            {canAccessCompany && (
+              <Link
+                href="/company"
+                className="text-white text-xl font-serif hover:text-gray-200 transition"
+              >
+                Aziende
+              </Link>
+            )}
 
             {role === "admin" && (
               <Link

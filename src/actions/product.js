@@ -1,5 +1,7 @@
 "use server";
 
+import { cookies } from "next/headers";
+
 const API = process.env.API_BASE_URL;
 
 if (!API) {
@@ -157,4 +159,45 @@ export const deleteProductAction = async (productId) => {
   }
 
   return data.product || data;
+};
+
+export const uploadProductImageAction = async (file) => {
+  const formData = new FormData();
+  formData.append("file", file);
+
+  const res = await fetch(`${API}/products/upload/cloud`, {
+    method: "POST",
+    body: formData,
+  });
+
+  if (!res.ok) {
+    throw new Error("Errore durante upload immagine");
+  }
+
+  const data = await res.json();
+  return data.file.url;
+};
+
+export const createProductAction = async (productData) => {
+  const token = cookies().get("token")?.value;
+
+  if (!token) {
+    throw new Error("Non autenticato");
+  }
+
+  const res = await fetch(`${API}/products/create`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(productData),
+  });
+
+  if (!res.ok) {
+    throw new Error("Errore creazione prodotto");
+  }
+
+  const data = await res.json();
+  return data.product;
 };
