@@ -2,6 +2,15 @@ import { getAllProductsAction } from "@/actions/product";
 import { getSession } from "@/lib/session";
 import RecipePage from "@/components/RecipePage/RecipePage";
 
+export const metadata = {
+  title: "Ricetta siciliana casuale | Sicilian Taste",
+  description:
+    "Scopri una ricetta siciliana autentica selezionata casualmente dai nostri prodotti artigianali.",
+  alternates: {
+    canonical: "/recipe/random",
+  },
+};
+
 const RandomRecipePage = async () => {
   const session = await getSession();
 
