@@ -2,10 +2,7 @@ const HomeAboutSection = () => {
   return (
     <section className=" py-16 px-4">
       <div className="max-w-6xl mx-auto space-y-10">
-        <h2
-          className="text-4xl text-center text-orange-500"
-          style={{ fontFamily: "'Brush Script MT', cursive" }}
-        >
+        <h2 className="text-4xl text-center text-orange-500">
           Cos’è Sicilian Taste
         </h2>
 
