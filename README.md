@@ -1,112 +1,98 @@
-🍊 Sicilian Taste
+# 🍊 Sicilian Taste
 
-Sicilian Taste è una piattaforma web moderna dedicata alla valorizzazione dei presìdi Slow Food siciliani, dei prodotti artigianali locali e delle piccole aziende che non dispongono di un proprio e-commerce.
+**Sicilian Taste** è una piattaforma web moderna dedicata alla valorizzazione dei **presìdi Slow Food siciliani**, dei prodotti artigianali locali e delle **piccole aziende che non dispongono di un proprio e-commerce**.
 
 La piattaforma consente:
 
-agli utenti di scoprire, acquistare e conoscere prodotti autentici siciliani
+- agli utenti di scoprire, acquistare e conoscere prodotti autentici siciliani
+- alle aziende di pubblicare e vendere i propri prodotti tramite una sezione dedicata
+- agli admin di gestire contenuti, prodotti e comunicazioni
 
-alle aziende di pubblicare e vendere i propri prodotti tramite una sezione dedicata
+---
 
-agli admin di gestire contenuti, prodotti e comunicazioni
+## 🌍 Vision & Mission
 
-🌍 Vision & Mission
-Vision
+### 🎯 Vision
 
 Diventare il punto di riferimento digitale per la gastronomia siciliana autentica.
 
-Mission
+### 🫒 Mission
 
-Promuovere presìdi Slow Food e produttori locali
+- Promuovere presìdi Slow Food e produttori locali
+- Offrire un canale di vendita semplice per le piccole aziende
+- Educare gli utenti alla qualità, alla tradizione e alla sostenibilità
 
-Offrire un canale di vendita semplice per le piccole aziende
+---
 
-Educare gli utenti alla qualità, alla tradizione e alla sostenibilità
+## 🧑‍🤝‍🧑 Tipologie di Utenti
 
-🧑‍🤝‍🧑 Tipologie di Utenti
-👤 User (Visitor / Customer)
+### 👤 User (Visitor / Customer)
 
-Naviga ricette e prodotti
+- Naviga ricette e prodotti
+- Scopre aziende locali
+- Acquista prodotti
+- Consulta ingredienti e valori nutrizionali
 
-Scopre aziende locali
+### 🏭 Company (Azienda)
 
-Acquista prodotti
+- Si registra come azienda
+- Crea, aggiorna ed elimina i propri prodotti
+- Visualizza solo i prodotti creati
+- Vende senza dover creare un sito web proprio
 
-Consulta valori nutrizionali e ingredienti
+### 🛠 Admin
 
-🏭 Company (Azienda)
+- Gestisce tutti i prodotti
+- Modifica ed elimina prodotti
+- Invia newsletter
+- Supervisiona la piattaforma
 
-Si registra come azienda
+---
 
-Crea, aggiorna e elimina i propri prodotti
+## 📚 User Stories
 
-Visualizza solo i prodotti creati
+### Visitor
 
-Vende senza dover creare un sito web proprio
+- Come utente voglio esplorare prodotti tipici siciliani
+- Come utente voglio leggere ricette dettagliate
+- Come utente voglio acquistare prodotti facilmente
 
-🛠 Admin
+### Company
 
-Gestisce tutti i prodotti
+- Come azienda voglio pubblicare i miei prodotti
+- Come azienda voglio modificarli e cancellarli
+- Come azienda voglio vendere online senza creare un sito
 
-Modifica ed elimina prodotti
+### Admin
 
-Invia newsletter
+- Come admin voglio gestire tutti i prodotti
+- Come admin voglio inviare newsletter
+- Come admin voglio mantenere la qualità dei contenuti
 
-Supervisiona la piattaforma
+---
 
-📚 User Stories
-Visitor
+## 🧱 Tech Stack
 
-Come utente voglio esplorare prodotti tipici siciliani
+### 🎨 Frontend
 
-Come utente voglio leggere ricette dettagliate
+- **Next.js 16 (App Router)**
+- React
+- Tailwind CSS
+- Redux Toolkit
+- Next Fonts (Google Fonts)
+- SEO statico e dinamico
 
-Come utente voglio acquistare prodotti facilmente
+### ⚙️ Backend
 
-Company
+- Node.js
+- Express
+- MongoDB + Mongoose
+- JWT Authentication
+- Cloudinary (upload immagini)
 
-Come azienda voglio pubblicare i miei prodotti
+---
 
-Come azienda voglio modificarli e cancellarli
-
-Come azienda voglio vendere online senza creare un sito
-
-Admin
-
-Come admin voglio gestire tutti i prodotti
-
-Come admin voglio inviare newsletter
-
-Come admin voglio mantenere la qualità dei contenuti
-
-🧱 Tech Stack
-Frontend
-
-Next.js 16 (App Router)
-
-React
-
-Tailwind CSS
-
-Redux Toolkit
-
-Next Fonts (Google Fonts)
-
-SEO statico e dinamico
-
-Backend
-
-Node.js
-
-Express
-
-MongoDB + Mongoose
-
-JWT Authentication
-
-Cloudinary (upload immagini)
-
-🗂 Struttura delle Pagine
+## 🗂 Struttura delle Pagine
 
 ```
 /
@@ -114,8 +100,8 @@ Cloudinary (upload immagini)
 ├─ recipe/random
 ├─ categories
 ├─ categories/[category]
-├─ company        (protetta)
-├─ admin          (protetta)
+├─ company (protetta)
+├─ admin (protetta)
 ├─ buy
 ├─ register
 ├─ login
@@ -125,16 +111,19 @@ Cloudinary (upload immagini)
 
 ```
 
-🧩 Wireframe (testuale)
-Home Page
+## 🧩 Wireframe (struttura concettuale)
+
+### 🏠 Home Page
+
 NAVBAR
 HERO (Sicilian Taste)
-SEZIONE CHI SIAMO
+SEZIONE “CHI SIAMO”
 PRODOTTI IN EVIDENZA
 CATEGORIE
 FOOTER
 
-Recipe / Product Detail
+### 🍝 Recipe / Product Detail
+
 IMMAGINE
 NOME
 PREZZO
@@ -144,80 +133,90 @@ RICETTA
 VALORI NUTRIZIONALI
 PRODOTTI SIMILI
 
-Area Aziende (/company)
+### 🏭 Area Aziende (`/company`)
+
 FORM CREAZIONE PRODOTTO | PREVIEW
 LISTA PRODOTTI AZIENDA
 [EDIT] [DELETE]
 
-Admin (/admin)
+### 🛠 Admin (`/admin`)
+
 LISTA TUTTI I PRODOTTI
 NEWSLETTER
 CREAZIONE PRODOTTO
 
-🔐 Autenticazione & Sicurezza
+---
 
-JWT Authentication
+## 🔐 Autenticazione & Sicurezza
 
-Cookie HttpOnly
+- JWT Authentication
+- Cookie HttpOnly
+- Gestione ruoli:
+  - `user`
+  - `company`
+  - `admin`
+- Route protette lato server
+- Middleware di autorizzazione
 
-Ruoli:
+---
 
-user
+## ⚙️ Setup & Avvio del Progetto
 
-company
+### 1️⃣ Clonare il repository
 
-admin
-
-Route protette lato server
-
-Middleware di autorizzazione
-
-⚙️ Setup & Avvio del Progetto
-1️⃣ Clona il repository
+```
 git clone https://github.com/Damilola91/sicilian-taste-next.git
 cd sicilian-taste
+```
 
-2️⃣ Installa le dipendenze
+### 2️⃣ Installare le dipendenze
+
+```
 npm install
+```
 
-3️⃣ Variabili d’ambiente
+### 3️⃣ Variabili d’ambiente
 
 Crea un file .env.local:
 
+```
+env
+Copia codice
 API_BASE_URL=http://localhost:5000
 NEXT_PUBLIC_SERVER_BASE_URL=http://localhost:5000
 JWT_SECRET=your_jwt_secret
 CLOUDINARY_CLOUD_NAME=xxxx
 CLOUDINARY_API_KEY=xxxx
 CLOUDINARY_API_SECRET=xxxx
+```
 
-4️⃣ Avvia il progetto
+### 4️⃣ Avvio del progetto
+
+```
 npm run dev
-
-Il progetto sarà disponibile su:
+📍 Il progetto sarà disponibile su:
 
 http://localhost:3000
+```
 
 🚀 Funzionalità Principali
-
 CRUD prodotti (company & admin)
 
-Upload immagini Cloudinary
+Upload immagini con Cloudinary
 
 Ricette e prodotti simili
 
 Random recipe
 
-Newsletter admin
+Newsletter per admin
 
 SEO ottimizzato
 
-Responsive design
+Design responsive
 
 Accesso basato su ruolo
 
 🧠 Filosofia del Progetto
-
 Sicilian Taste non è solo un e-commerce.
 
 È:
@@ -232,14 +231,17 @@ Ogni prodotto racconta una storia.
 Ogni azienda ha il suo spazio.
 
 📌 Stato del Progetto
-
 ✅ Core features completate
+
 ✅ Pagamenti online
-🔜 Analytics aziende
-🔜 Internazionalizzazione
+
+🔜 Riepilogo Pagamenti
+
+🔜 Dashboard analytics aziende
+
+🔜 Internazionalizzazione (i18n)
 
 👨‍💻 Autore
-
 Damilola Abiola Wiwoloku
 Full-Stack Developer
 Specializzato in Next.js, Node.js, MongoDB
