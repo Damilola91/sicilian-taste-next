@@ -34,8 +34,6 @@ export const metadata = {
 
   publisher: "Damilola Abiola Wiwoloku",
 
-  metadataBase: new URL("https://sicilian-taste-next.vercel.app"),
-
   alternates: {
     canonical: "/",
   },
