@@ -8,10 +8,7 @@ const Terms = () => {
     <>
       <Navbar session={session} />
       <main className="max-w-4xl mx-auto px-4 py-20 space-y-10">
-        <h1
-          className="text-4xl text-center text-orange-500"
-          style={{ fontFamily: "'Brush Script MT', cursive" }}
-        >
+        <h1 className="text-4xl text-center text-orange-500">
           Termini e Condizioni
         </h1>
 

@@ -51,7 +51,7 @@ const CreateProductClient = ({ initialProducts }) => {
         },
       };
 
-      /* 3️⃣ Create product */
+      /*  Create product */
       const res = await fetch("/api/company/products", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -76,12 +76,7 @@ const CreateProductClient = ({ initialProducts }) => {
     <section className="max-w-7xl mx-auto px-4 py-14 space-y-16">
       {/* HEADER + BACK */}
       <div className="flex items-center justify-between">
-        <h1
-          className="text-4xl text-orange-500"
-          style={{ fontFamily: "'Brush Script MT', cursive" }}
-        >
-          Area Aziende
-        </h1>
+        <h1 className="text-4xl text-orange-500">Area Aziende</h1>
 
         <button
           onClick={() => router.back()}

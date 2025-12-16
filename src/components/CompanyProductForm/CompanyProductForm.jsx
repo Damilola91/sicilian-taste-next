@@ -49,10 +49,7 @@ const CompanyProductForm = ({ onCreateProduct, loading }) => {
       onSubmit={handleSubmit}
       className="bg-white rounded-2xl shadow-xl p-6 space-y-5"
     >
-      <h2
-        className="text-3xl text-center text-orange-500 mb-2"
-        style={{ fontFamily: "'Brush Script MT', cursive" }}
-      >
+      <h2 className="text-3xl text-center text-orange-500 mb-2">
         Dettagli Prodotto
       </h2>
 

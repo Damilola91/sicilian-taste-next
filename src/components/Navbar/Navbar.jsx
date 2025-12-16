@@ -29,11 +29,7 @@ const Navbar = ({ session }) => {
       <nav className="w-full sticky top-0 z-50 shadow-md bg-[#ff6347]">
         <div className="max-w-6xl mx-auto px-4 flex justify-between items-center h-16">
           {/* LOGO */}
-          <Link
-            href="/"
-            className="text-3xl font-bold text-white"
-            style={{ fontFamily: "'Brush Script MT', cursive" }}
-          >
+          <Link href="/" className="text-3xl font-bold text-white font-brand">
             SicilianTaste
           </Link>
 
@@ -41,14 +37,14 @@ const Navbar = ({ session }) => {
           <div className="hidden md:flex items-center gap-6">
             <Link
               href="/recipe"
-              className="text-white text-lg font-serif hover:text-gray-200 transition"
+              className="text-white text-lg font-serif hover:text-gray-200 transition font-brand"
             >
               Recipe Page
             </Link>
 
             <Link
               href="/categories"
-              className="text-white text-lg font-serif hover:text-gray-200 transition"
+              className="text-white text-lg font-serif hover:text-gray-200 transition font-brand"
             >
               Category
             </Link>
@@ -57,7 +53,7 @@ const Navbar = ({ session }) => {
             {canAccessCompany && (
               <Link
                 href="/company"
-                className="text-white text-lg font-serif hover:text-gray-200 transition"
+                className="text-white text-lg font-serif hover:text-gray-200 transition font-brand"
               >
                 Aziende
               </Link>
@@ -66,7 +62,7 @@ const Navbar = ({ session }) => {
             {role === "admin" && (
               <Link
                 href="/admin"
-                className="text-white text-lg font-serif hover:text-gray-200 transition"
+                className="text-white text-lg font-serif hover:text-gray-200 transition font-brand"
               >
                 Admin
               </Link>
@@ -92,7 +88,7 @@ const Navbar = ({ session }) => {
             {/* LOGIN / LOGOUT */}
             <button
               onClick={() => setIsDrawerOpen(true)}
-              className="px-4 py-2 bg-white text-[#ff6347] rounded-md font-medium hover:bg-gray-100 transition"
+              className="px-4 py-2 bg-white text-[#ff6347] rounded-md font-medium hover:bg-gray-100 transition font-brand"
             >
               {isAuthenticated ? "Logout" : "Login"}
             </button>

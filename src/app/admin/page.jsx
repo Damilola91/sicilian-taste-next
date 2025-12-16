@@ -15,12 +15,7 @@ const AdminPage = async () => {
 
   return (
     <main className="max-w-7xl mx-auto px-4 py-14 space-y-20">
-      <h1
-        className="text-5xl text-center text-orange-500"
-        style={{ fontFamily: "'Brush Script MT', cursive" }}
-      >
-        Admin Dashboard
-      </h1>
+      <h1 className="text-5xl text-center text-orange-500">Admin Dashboard</h1>
 
       {/* LISTA PRODOTTI */}
       <AdminProductsList />
