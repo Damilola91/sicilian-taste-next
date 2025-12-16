@@ -3,8 +3,8 @@ import { Facebook, Twitter, Instagram, Youtube } from "lucide-react";
 
 const Footer = () => {
   return (
-    <footer className="bg-gray-900 text-gray-300">
-      <div className="max-w-6xl mx-auto px-6 py-12">
+    <footer className="bg-gray-900 text-gray-300 mt-auto w-full">
+      <div className="max-w-7xl mx-auto px-6 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
           {/* LOGO + QUOTE */}
           <div>
@@ -12,8 +12,8 @@ const Footer = () => {
               SicilianTaste
             </h2>
             <p className="text-sm leading-relaxed text-gray-400">
-              “On the other hand, we denounce with righteous indignation and
-              dislike men who are so beguiled.”
+              Una piattaforma dedicata ai presìdi Slow Food e alle eccellenze
+              siciliane, per sostenere i piccoli produttori locali.
             </p>
           </div>
 
@@ -24,36 +24,25 @@ const Footer = () => {
             </h4>
             <ul className="space-y-2 text-sm">
               <li>
-                <a
-                  href="#about"
-                  className="hover:text-orange-400 transition-colors"
-                >
-                  About us
-                </a>
+                <Link href="/" className="hover:text-orange-400 transition">
+                  Home
+                </Link>
               </li>
               <li>
-                <a
-                  href="#careers"
-                  className="hover:text-orange-400 transition-colors"
+                <Link
+                  href="/categories"
+                  className="hover:text-orange-400 transition"
                 >
-                  Careers
-                </a>
+                  Categories
+                </Link>
               </li>
               <li>
                 <Link
                   href="/contact"
-                  className="hover:text-orange-400 transition-colors"
+                  className="hover:text-orange-400 transition"
                 >
                   Contact Us
                 </Link>
-              </li>
-              <li>
-                <a
-                  href="#feedback"
-                  className="hover:text-orange-400 transition-colors"
-                >
-                  Feedback
-                </a>
               </li>
             </ul>
           </div>
@@ -63,36 +52,20 @@ const Footer = () => {
             <h4 className="text-lg font-semibold text-white mb-3">Legal</h4>
             <ul className="space-y-2 text-sm">
               <li>
-                <a
+                <Link
                   href="/terms"
-                  className="hover:text-orange-400 transition-colors"
+                  className="hover:text-orange-400 transition"
                 >
-                  Terms
-                </a>
+                  Terms & Conditions
+                </Link>
               </li>
               <li>
-                <a
-                  href="/contact"
-                  className="hover:text-orange-400 transition-colors"
-                >
-                  Contacts
-                </a>
-              </li>
-              <li>
-                <a
+                <Link
                   href="/privacy"
-                  className="hover:text-orange-400 transition-colors"
+                  className="hover:text-orange-400 transition"
                 >
                   Privacy Policy
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#copyright"
-                  className="hover:text-orange-400 transition-colors"
-                >
-                  Copyright
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
@@ -101,30 +74,16 @@ const Footer = () => {
           <div>
             <h4 className="text-lg font-semibold text-white mb-3">Follow</h4>
             <div className="flex gap-4 mt-2">
-              <a
-                href="#facebook"
-                className="hover:text-orange-400 transition-colors"
-              >
-                <Facebook size={22} />
-              </a>
-              <a
-                href="#twitter"
-                className="hover:text-orange-400 transition-colors"
-              >
-                <Twitter size={22} />
-              </a>
-              <a
-                href="#instagram"
-                className="hover:text-orange-400 transition-colors"
-              >
-                <Instagram size={22} />
-              </a>
-              <a
-                href="#youtube"
-                className="hover:text-orange-400 transition-colors"
-              >
-                <Youtube size={22} />
-              </a>
+              <Facebook
+                className="hover:text-orange-400 transition"
+                size={22}
+              />
+              <Twitter className="hover:text-orange-400 transition" size={22} />
+              <Instagram
+                className="hover:text-orange-400 transition"
+                size={22}
+              />
+              <Youtube className="hover:text-orange-400 transition" size={22} />
             </div>
           </div>
         </div>
