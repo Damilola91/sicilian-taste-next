@@ -105,7 +105,7 @@ const CreateProductClient = ({ initialProducts }) => {
       </div>
 
       {/* LISTA PRODOTTI UTENTE */}
-      <CompanyProductsList products={products} />
+      <CompanyProductsList products={products} setProducts={setProducts} />
     </section>
   );
 };

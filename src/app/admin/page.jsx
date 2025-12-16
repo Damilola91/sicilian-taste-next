@@ -1,12 +1,13 @@
 import { redirect } from "next/navigation";
 import { getSession } from "@/lib/session";
-
+import { getMyProductsAction } from "@/actions/product";
 import CreateProductClient from "@/components/CreateProductClient/CreateProductClient";
 import AdminProductsList from "@/components/AdminProductList/AdminProductList";
 import SendNewsletter from "@/components/SendNewsletter/SendNewsletter";
 
 const AdminPage = async () => {
   const session = await getSession();
+  const { products } = await getMyProductsAction();
 
   if (!session || session.role !== "admin") {
     redirect("/");
@@ -25,7 +26,7 @@ const AdminPage = async () => {
       <AdminProductsList />
 
       {/* CREATE PRODUCT (riuso Company) */}
-      <CreateProductClient />
+      <CreateProductClient initialProducts={products} />
 
       {/* NEWSLETTER */}
       <SendNewsletter />

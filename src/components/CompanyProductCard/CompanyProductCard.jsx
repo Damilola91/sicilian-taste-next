@@ -1,45 +1,47 @@
+"use client";
+
 import Image from "next/image";
 
-const toNumber = (value, fallback = 0) => {
-  if (value == null) return fallback;
-
-  // Decimal128 tipo { $numberDecimal: "12.34" }
-  if (typeof value === "object" && value.$numberDecimal) {
-    const n = Number(value.$numberDecimal);
-    return Number.isFinite(n) ? n : fallback;
-  }
-
-  // string / number
-  const n = Number(value);
-  return Number.isFinite(n) ? n : fallback;
-};
-
-const CompanyProductCard = ({ product }) => {
-  const price = toNumber(product?.price, 0);
-  const stock = toNumber(product?.availableInStock, 0);
+const CompanyProductCard = ({ product, onEdit, onDelete }) => {
+  const price = Number(product.price || 0);
 
   return (
-    <div className="bg-white rounded-xl shadow hover:shadow-lg transition overflow-hidden">
+    <div className="bg-white rounded-xl shadow-md border overflow-hidden flex flex-col">
       <div className="relative h-40 w-full">
         <Image
           src={product.img}
           alt={product.name}
           fill
           className="object-cover"
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
         />
       </div>
 
-      <div className="p-4 space-y-1">
-        <h3 className="font-semibold truncate">{product.name}</h3>
+      <div className="p-4 flex-1 flex flex-col">
+        <h3 className="text-lg font-semibold text-orange-500">
+          {product.name}
+        </h3>
 
-        <p className="text-sm text-gray-600 line-clamp-1">
+        <p className="text-sm text-gray-600 line-clamp-2">
           {product.description}
         </p>
 
-        <p className="font-bold text-orange-600">€{price.toFixed(2)}</p>
+        <p className="mt-2 font-medium">€ {price.toFixed(2)}</p>
 
-        <p className="text-xs text-gray-500">Stock: {stock}</p>
+        <div className="mt-auto flex gap-2 pt-4">
+          <button
+            onClick={() => onEdit(product)}
+            className="flex-1 px-3 py-2 text-sm rounded-lg border border-orange-400 text-orange-500 hover:bg-orange-50 transition"
+          >
+            Modifica
+          </button>
+
+          <button
+            onClick={() => onDelete(product._id)}
+            className="flex-1 px-3 py-2 text-sm rounded-lg bg-red-500 text-white hover:bg-red-600 transition"
+          >
+            Elimina
+          </button>
+        </div>
       </div>
     </div>
   );
