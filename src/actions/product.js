@@ -25,7 +25,7 @@ const normalizeProduct = (p) => ({
 });
 
 const getAuthHeaders = async () => {
-  const cookieStore = await cookies(); // ✅ obbligatorio in Next 16
+  const cookieStore = await cookies(); // ✅ Next 16
   const token = cookieStore.get("token")?.value;
 
   if (!token) {
@@ -37,12 +37,10 @@ const getAuthHeaders = async () => {
   };
 };
 
-/* --------------------------------
-   1️⃣ TUTTI I PRODOTTI
--------------------------------- */
-
 export const getAllProductsAction = async () => {
-  const res = await fetch(`${API}/products`, { cache: "no-store" });
+  const res = await fetch(`${API}/products`, {
+    next: { revalidate: 360 },
+  });
 
   if (!res.ok) throw new Error("Errore nel recupero dei prodotti");
 
@@ -54,16 +52,12 @@ export const getAllProductsAction = async () => {
   };
 };
 
-/* --------------------------------
-   2️⃣ PRODOTTI PAGINATI
--------------------------------- */
-
 export const getPaginatedProductsAction = async ({
   page = 1,
   pageSize = 8,
 } = {}) => {
   const res = await fetch(`${API}/products?page=${page}&pageSize=${pageSize}`, {
-    cache: "no-store",
+    next: { revalidate: 360 },
   });
 
   if (!res.ok) throw new Error("Errore nel recupero prodotti paginati");
@@ -76,10 +70,6 @@ export const getPaginatedProductsAction = async ({
   };
 };
 
-/* --------------------------------
-   3️⃣ PRODOTTI PER CATEGORIA
--------------------------------- */
-
 export const getProductsByCategoryAction = async ({
   category,
   page = 1,
@@ -91,7 +81,9 @@ export const getProductsByCategoryAction = async ({
     `${API}/products/search/${encodeURIComponent(
       category
     )}?page=${page}&pageSize=${pageSize}`,
-    { cache: "no-store" }
+    {
+      next: { revalidate: 360 },
+    }
   );
 
   if (!res.ok) {
@@ -103,23 +95,17 @@ export const getProductsByCategoryAction = async ({
   return res.json();
 };
 
-/* --------------------------------
-   4️⃣ PRODOTTO PER ID
--------------------------------- */
-
 export const getProductByIdAction = async (id) => {
   if (!id) throw new Error("ID prodotto mancante");
 
-  const res = await fetch(`${API}/products/${id}`, { cache: "no-store" });
+  const res = await fetch(`${API}/products/${id}`, {
+    next: { revalidate: 360 },
+  });
 
   if (!res.ok) throw new Error("Errore prodotto");
 
   return res.json();
 };
-
-/* --------------------------------
-   5️⃣ SEARCH PER NOME
--------------------------------- */
 
 export const searchProductsByNameAction = async (name) => {
   const query = name?.trim();
@@ -127,17 +113,15 @@ export const searchProductsByNameAction = async (name) => {
 
   const res = await fetch(
     `${API}/products/title/${encodeURIComponent(query)}`,
-    { cache: "no-store" }
+    {
+      next: { revalidate: 360 },
+    }
   );
 
   if (!res.ok) throw new Error("Errore ricerca");
 
   return res.json();
 };
-
-/* --------------------------------
-   6️⃣ CREA PRODOTTO (company/admin)
--------------------------------- */
 
 export const createProductAction = async (productData) => {
   const res = await fetch(`${API}/products/create`, {
@@ -157,10 +141,6 @@ export const createProductAction = async (productData) => {
 
   return normalizeProduct(data.product);
 };
-
-/* --------------------------------
-   7️⃣ UPDATE PRODOTTO
--------------------------------- */
 
 export const updateProductAction = async ({ productId, updateData }) => {
   if (!productId) throw new Error("productId mancante");
@@ -183,10 +163,6 @@ export const updateProductAction = async ({ productId, updateData }) => {
   return normalizeProduct(data.product || data);
 };
 
-/* --------------------------------
-   8️⃣ DELETE PRODOTTO
--------------------------------- */
-
 export const deleteProductAction = async (productId) => {
   if (!productId) throw new Error("productId mancante");
 
@@ -206,13 +182,8 @@ export const deleteProductAction = async (productId) => {
   return normalizeProduct(data.product || data);
 };
 
-/* --------------------------------
-   9️⃣ PRODOTTI DELL’UTENTE LOGGATO
--------------------------------- */
-
 export const getMyProductsAction = async () => {
   const res = await fetch(`${API}/products/my`, {
-    cache: "no-store",
     headers: {
       ...(await getAuthHeaders()),
     },

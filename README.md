@@ -180,8 +180,7 @@ npm install
 Crea un file .env.local:
 
 ```
-env
-Copia codice
+
 API_BASE_URL=http://localhost:5000
 NEXT_PUBLIC_SERVER_BASE_URL=http://localhost:5000
 JWT_SECRET=your_jwt_secret
