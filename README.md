@@ -231,6 +231,7 @@ Ogni prodotto racconta una storia.
 Ogni azienda ha il suo spazio.
 
 📌 Stato del Progetto
+
 ✅ Core features completate
 
 ✅ Pagamenti online
